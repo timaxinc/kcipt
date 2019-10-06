@@ -2,6 +2,7 @@ import util.includeFromModuleDir
 
 rootProject.name = "kcipt"
 
-includeFromModuleDir(":core")
+includeFromModuleDir(":lib")
 includeFromModuleDir(":util")
+includeFromModuleDir(":core")
 includeFromModuleDir(":test")
