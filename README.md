@@ -1,20 +1,20 @@
 # kcipt
 
-##targets of kcipt
+## targets of kcipt
 
-###what
+### what
 
 - create a easy to use library for compiling and executing kotlin scripts on the fly
 
-###how
+### how
 
 - create a compiler and a executor using kotlin's scripting api
 
-###targeted usage
+### targeted usage
 
-####compile and execute 
+#### compile and execute 
 
-#####from kotlin
+##### from kotlin
 ````kotlin
 //create a FileSource that can be read by the script-compiler
 val scriptSource = FileSource("path/to/example/script/example_script.script.extension") 
@@ -23,7 +23,7 @@ val scriptSource = FileSource("path/to/example/script/example_script.script.exte
 val result: ExampleScriptContext = executeScript(scriptSource, ExampleScriptContext())
 ````
 
-#####content of path/to/example/script/example_script.script.extension
+##### content of path/to/example/script/example_script.script.extension
 ````kotlin
 //script content is compiled inside a code block with context(ExampleScriptContext) as receiver
 //with(context) {
