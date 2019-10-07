@@ -15,9 +15,9 @@ object Deps {
             "org.jetbrains.kotlinx:kotlinx-serialization-runtime:${Versions.kotlinSerializationRuntime}"
 
     object Jvm {
-        val koltinScriptRuntime = "org.jetbrains.kotlin:kotlin-script-runtime:${Versions.kotlin}"
-        val koltinScriptUtil = "org.jetbrains.kotlin:kotlin-script-util:${Versions.kotlin}"
-        val koltinScriptHost = "org.jetbrains.kotlin:kotlin-scripting-jvm-host:${Versions.kotlin}"
+        val koltinScriptCommon = "org.jetbrains.kotlin:kotlin-scripting-common:${Versions.kotlin}"
+        val koltinScriptJvm = "org.jetbrains.kotlin:kotlin-scripting-jvm:${Versions.kotlin}"
+        val koltinScriptJvmHost = "org.jetbrains.kotlin:kotlin-scripting-jvm-host:${Versions.kotlin}"
         val ktorServer = "io.ktor:ktor-server-core:${Versions.ktor}"
         val ktorServerWebSocket = "io.ktor:ktor-websockets:${Versions.ktor}"
         val ktorServerNetty = "io.ktor:ktor-server-netty:${Versions.ktor}"
