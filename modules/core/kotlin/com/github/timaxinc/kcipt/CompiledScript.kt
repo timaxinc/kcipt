@@ -1,4 +1,3 @@
 package com.github.timaxinc.kcipt
 
-interface CompiledScript : Script {
-}
+open class CompiledScript(val source: Script, val rawClasses: Map<String, ByteArray>) : Script by source
