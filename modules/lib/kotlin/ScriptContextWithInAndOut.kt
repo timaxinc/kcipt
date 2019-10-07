@@ -1,4 +1,4 @@
-class ScriptContextWithInAndOut {
+class ScriptContextWithInAndOut: ScriptContext {
     fun print(printString: String) {
         TODO("Implement  me!")
     }
