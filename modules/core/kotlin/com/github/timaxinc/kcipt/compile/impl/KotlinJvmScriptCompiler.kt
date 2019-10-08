@@ -8,10 +8,9 @@ import com.github.timaxinc.kcipt.result.Result
 import com.github.timaxinc.kcipt.result.createSuccess
 import com.github.timaxinc.kcipt.result.createFailure
 import kotlin.script.experimental.api.ResultWithDiagnostics
-import kotlin.script.experimental.api.resultOrNull
+import kotlin.script.experimental.api.valueOrNull
 import kotlin.script.experimental.api.CompiledScript as KotlinCompiledScript
 import kotlin.script.experimental.host.toScriptSource
-import kotlin.script.experimental.jvmhost.BasicJvmScriptClassFilesGenerator
 import kotlin.script.experimental.jvmhost.BasicJvmScriptingHost
 import kotlin.script.experimental.jvmhost.createJvmCompilationConfigurationFromTemplate
 import kotlin.script.templates.standard.SimpleScriptTemplate
@@ -30,7 +29,7 @@ class KotlinJvmScriptCompiler(private val scriptingHost: BasicJvmScriptingHost =
         return if (compileResult is ResultWithDiagnostics.Failure) {
             createFailure(compileResult.reports.map { KotlinJvmScriptCompilerReport(it) })
         } else {
-            createSuccess(KotlinJvmCompiledScript(compileResult.resultOrNull()!!, script))
+            createSuccess(KotlinJvmCompiledScript(compileResult.valueOrNull()!!, script))
         }
     }
 }
