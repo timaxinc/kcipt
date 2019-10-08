@@ -16,7 +16,7 @@ class URLEnumeration(private val enums: List<Enumeration<URL>>) : Enumeration<UR
         }
     }
 
-    private operator fun next(): Boolean {
+    private fun next(): Boolean {
         while (this.index < this.enums.size) {
             if (this.enums[this.index].hasMoreElements()) {
                 return true
