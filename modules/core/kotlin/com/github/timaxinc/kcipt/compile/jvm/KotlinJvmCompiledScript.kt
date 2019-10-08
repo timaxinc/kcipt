@@ -1,4 +1,4 @@
-package com.github.timaxinc.kcipt.compile.impl
+package com.github.timaxinc.kcipt.compile.jvm
 
 import com.github.timaxinc.kcipt.CompiledScript
 import com.github.timaxinc.kcipt.Script
