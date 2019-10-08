@@ -1,6 +1,7 @@
 package com.github.timaxinc.kcipt.classloader
 
 import java.net.URL
+import java.util.*
 
 class StackClassloader(private val loaders: MutableList<ClassLoader>) : ClassLoader() {
     constructor(vararg loader: ClassLoader) : this(loader.toMutableList())
@@ -25,5 +26,18 @@ class StackClassloader(private val loaders: MutableList<ClassLoader>) : ClassLoa
             if (resource != null) return resource
         }
         return null
+    }
+
+    override fun getResources(name: String?): Enumeration<URL> {
+        val resources = mutableListOf<Enumeration<URL>>()
+
+        loaders.forEach {
+            val cLResources = it.getResources(name)
+            if (cLResources.hasMoreElements()) {
+                resources.add(cLResources)
+            }
+        }
+
+        return URLEnumeration(resources)
     }
 }
