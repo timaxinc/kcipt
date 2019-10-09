@@ -5,13 +5,14 @@ import java.util.*
 
 /**
  * BlockingClassLoader is a ClassLoader holding blacklist of packages and classes, as well as a parent ClassLoader.
- * All classes and packages contained in that List may not be used when attempting to load a Class or Resource
+ * All classes, resources and packages contained in that List may not be used when attempting to load a Class or
+ * Resource.
  *
  * @param parent
  *          the ClassLoader that will be used, if the requested class passes the blacklist check
  * @property blacklist
- *          the blacklist containing names of Classes, as well as of packages, which may not be used when loading a
- *          class or resource.
+ *          the blacklist containing names of Classes, resources, as well as of packages, which may not be used when
+ *          loading a class or resource.
  */
 class BlockingClassloader(parent: ClassLoader, private val blacklist: List<String>) :
         ClassLoader(parent) {
@@ -22,8 +23,8 @@ class BlockingClassloader(parent: ClassLoader, private val blacklist: List<Strin
      * @param parent
      *          the ClassLoader that will be used, if the requested class passes the blacklist check
      * @param blacklist
-     *          the blacklist containing names of Classes, as well as of packages, which may not be used when loading a
-     *          class or resource.
+     *          the blacklist containing names of Classes, resources, as well as of packages, which may not be used when
+     *          loading a class or resource.
      */
     constructor(parent: ClassLoader, vararg blacklist: String) : this(parent, blacklist.toList())
 
@@ -42,8 +43,15 @@ class BlockingClassloader(parent: ClassLoader, private val blacklist: List<Strin
      *          in case the package containing the requested class is blocked.
      */
     override fun loadClass(name: String?): Class<*> {
-        blockCheck(name)
-        return super.loadClass(name)
+        if (name==null) {
+            return super.loadClass(name)
+        }
+
+        when (val it = name startsWithMember blacklist) {
+            is Block.None -> return super.loadClass(name)
+            is Block.Exact -> throw ClassBlockedException(name)
+            is Block.Package -> throw PackageBlockedException(it.packageName)
+        }
     }
 
     /**
@@ -61,7 +69,7 @@ class BlockingClassloader(parent: ClassLoader, private val blacklist: List<Strin
      *          in case the package containing the requested class is blocked.
      */
     override fun getResource(name: String?): URL? {
-        blockCheck(name)
+        blockResourceCheck(name)
         return super.getResource(name)
     }
 
@@ -80,25 +88,25 @@ class BlockingClassloader(parent: ClassLoader, private val blacklist: List<Strin
      *          in case the package containing the requested class is blocked.
      */
     override fun getResources(name: String?): Enumeration<URL> {
-        blockCheck(name)
+        blockResourceCheck(name)
         return super.getResources(name)
     }
 
     /**
-     * Checks if the name of the class is on the blacklist of classes and packages. If that is the case, the
+     * Checks if the name of the resource is on the blacklist of resources and packages. If that is the case, the
      * corresponding exception will be thrown.
      *
      * @param name
      *          the name of the class
      */
-    private fun blockCheck(name: String?) {
+    private fun blockResourceCheck(name: String?) {
         if (name==null) {
             return
         }
 
         when (val it = name startsWithMember blacklist) {
             is Block.None -> return
-            is Block.Class -> throw ClassBlockedException(it.className)
+            is Block.Exact -> throw ClassBlockedException(name)
             is Block.Package -> throw PackageBlockedException(it.packageName)
         }
     }
@@ -116,7 +124,7 @@ class BlockingClassloader(parent: ClassLoader, private val blacklist: List<Strin
     private infix fun String.startsWithMember(list: List<String>): Block {
         list.forEach {
             if (this.startsWith(it)) {
-                if (this==it) return Block.Class(it)
+                if (this==it) return Block.Exact
                 return Block.Package(it)
             }
         }
@@ -125,7 +133,7 @@ class BlockingClassloader(parent: ClassLoader, private val blacklist: List<Strin
 
     private sealed class Block {
         object None : Block()
-        class Class(val className: String) : Block()
+        object Exact : Block()
         class Package(val packageName: String) : Block()
     }
 
@@ -150,6 +158,18 @@ class BlockingClassloader(parent: ClassLoader, private val blacklist: List<Strin
      *          The name of the Class being blocked.
      */
     class ClassBlockedException internal constructor(name: String) : BlockedException("Class $name is blocked")
+
+    /**
+     * ResourceBlockedException gets thrown in case the specified resource is present on the blacklist.
+     *
+     * @constructor
+     *          Instantiates a new ResourceBlockedException.
+     *
+     * @param name
+     *          The name of the Resource being blocked.
+     */
+    class ResourceBlockedException internal constructor(name: String) : BlockedException("Resource $name is blocked")
+
     /**
      * PackageBlockedException gets thrown in case the package containing the class is present on the blacklist.
      *
