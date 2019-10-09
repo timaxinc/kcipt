@@ -7,16 +7,16 @@ import java.util.*
  * BlockingClassLoader is a ClassLoader holding blacklist of packages and classes, as well as a parent ClassLoader.
  * All classes and packages contained in that List may not be used when attempting to load a Class or Resource
  *
- * @property parentLoader
+ * @param parent
  *          the ClassLoader that will be used, if the requested class passes the blacklist check
  * @property blacklist
  *          the blacklist containing names of Classes, as well as of packages, which may not be used when loading a
  *          class or resource.
  */
-class BlockingClassloader(private val parentLoader: ClassLoader, private val blacklist: List<String>) :
-        ClassLoader(parentLoader) {
+class BlockingClassloader(parent: ClassLoader, private val blacklist: List<String>) :
+        ClassLoader(parent) {
 
-    constructor(parentLoader: ClassLoader, vararg blocked: String) : this(parentLoader, blocked.toList())
+    constructor(parent: ClassLoader, vararg blocked: String) : this(parent, blocked.toList())
 
     /**
      * LoadClass loads the class with the specified name. If the class or its package is present in the blacklist,
