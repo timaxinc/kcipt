@@ -106,7 +106,7 @@ class BlockingClassloader(parent: ClassLoader, private val blacklist: List<Strin
 
         when (val it = name startsWithMember blacklist) {
             is Block.None -> return
-            is Block.Exact -> throw ClassBlockedException(name)
+            is Block.Exact -> throw ResourceBlockedException(name)
             is Block.Package -> throw PackageBlockedException(it.packageName)
         }
     }
