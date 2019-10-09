@@ -29,6 +29,29 @@ internal class BlockingClassloaderTest : AnnotationSpec() {
             bcl.loadClass(String::class.java.name)
         }
     }
+
+
+    @Test
+    fun `getResource(String) - No Blacklist`() {
+        val bcl = BlockingClassloader(DummyLoader())
+        bcl.getResource("dummyValue") shouldBe DummyClass::class.java
+    }
+
+    @Test
+    fun `getResource(String) - Resource on Blacklist`() {
+        val bcl = BlockingClassloader(DummyLoader(), "blockedDummyValue")
+        shouldThrow<BlockingClassloader.ResourceBlockedException> {
+            bcl.getResource("blockedDummyValue")
+        }
+    }
+
+    @Test
+    fun `getResource(String) - Package on Blacklist`() {
+        val bcl = BlockingClassloader(DummyLoader(), "blocked.path")
+        shouldThrow<BlockingClassloader.PackageBlockedException> {
+            bcl.getResource("blocked.path.DummyValue")
+        }
+    }
 }
 
 class DummyLoader : ClassLoader() {
