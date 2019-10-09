@@ -16,7 +16,7 @@ import java.util.*
 class BlockingClassloader(parent: ClassLoader, private val blacklist: List<String>) :
         ClassLoader(parent) {
 
-    constructor(parent: ClassLoader, vararg blocked: String) : this(parent, blocked.toList())
+    constructor(parent: ClassLoader, vararg blacklist: String) : this(parent, blacklist.toList())
 
     /**
      * LoadClass loads the class with the specified name. If the class or its package is present in the blacklist,
