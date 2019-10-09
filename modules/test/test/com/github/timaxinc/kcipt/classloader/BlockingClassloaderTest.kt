@@ -34,7 +34,7 @@ internal class BlockingClassloaderTest : AnnotationSpec() {
     @Test
     fun `getResource(String) - No Blacklist`() {
         val bcl = BlockingClassloader(DummyLoader())
-        bcl.getResource("dummyValue") shouldBe DummyClass::class.java
+        bcl.getResource("dummyValue") shouldBe dummyUrl
     }
 
     @Test
@@ -45,6 +45,7 @@ internal class BlockingClassloaderTest : AnnotationSpec() {
         }
     }
 
+
     @Test
     fun `getResource(String) - Package on Blacklist`() {
         val bcl = BlockingClassloader(DummyLoader(), "blocked.path")
@@ -52,11 +53,36 @@ internal class BlockingClassloaderTest : AnnotationSpec() {
             bcl.getResource("blocked.path.DummyValue")
         }
     }
+
+    @Test
+    fun `getResources(String) - No Blacklist`() {
+        val bcl = BlockingClassloader(DummyLoader())
+        val resources = bcl.getResources("dummyValue")
+        resources.nextElement() shouldBe URL("https://we.love.unicorns")
+    }
+
+    @Test
+    fun `getResources(String) - Resource on Blacklist`() {
+        val bcl = BlockingClassloader(DummyLoader(), "blockedDummyValue")
+        shouldThrow<BlockingClassloader.ResourceBlockedException> {
+            bcl.getResources("blockedDummyValue")
+        }
+    }
+
+    @Test
+    fun `getResources(String) - Package on Blacklist`() {
+        val bcl = BlockingClassloader(DummyLoader(), "blocked.path")
+        shouldThrow<BlockingClassloader.PackageBlockedException> {
+            bcl.getResources("blocked.path.DummyValue")
+        }
+    }
 }
+
+val dummyUrl = URL("https://i.am.mocked")
 
 class DummyLoader : ClassLoader() {
     override fun loadClass(name: String?): Class<*> = DummyClass()::class.java
-    override fun getResource(name: String?): URL? = URL("i/am/mocked")
+    override fun getResource(name: String?): URL? = URL("https://i.am.mocked")
     override fun getResources(name: String?): Enumeration<URL> = DummyEnumeration()
 }
 
@@ -68,7 +94,7 @@ class DummyEnumeration : Enumeration<URL> {
     }
 
     override fun nextElement(): URL {
-        return URL("we/love/unicorns")
+        return URL("https://we.love.unicorns")
     }
 
 }
