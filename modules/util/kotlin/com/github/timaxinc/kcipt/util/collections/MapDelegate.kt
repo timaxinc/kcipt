@@ -1,20 +1,21 @@
-package com.github.timaxinc.kcipt
+package com.github.timaxinc.kcipt.util.collections
 
 import kotlin.reflect.KProperty
 
-fun <T : Any> delegate(default: T): ConfigurationDelegate<T> = ConfigurationDelegate(default)
+fun <V : Any> delegate(default: V): MutableMapDelegate<V> =
+        MutableMapDelegate(default)
 
-class ConfigurationDelegate<T : Any> internal constructor(
-        private val defaultValue: T,
+class MutableMapDelegate<V : Any> internal constructor(
+        private val defaultValue: V,
         private val key: String? = null
 ) {
 
-    operator fun getValue(thisRef: ScriptConfiguration, property: KProperty<*>): T {
+    operator fun getValue(thisRef: Map<String, Any>, property: KProperty<*>): V {
         val valueInConfiguration = thisRef[key ?: property.name]
         return if (valueInConfiguration != null) {
             try {
                 @Suppress("UNCHECKED_CAST")
-                valueInConfiguration as T
+                valueInConfiguration as V
             } catch (classCastException: ClassCastException) {
                 defaultValue
             }
@@ -22,8 +23,8 @@ class ConfigurationDelegate<T : Any> internal constructor(
             defaultValue
         }
     }
-    operator fun setValue(thisRef: ScriptConfiguration, property: KProperty<*>, value: T) {
+
+    operator fun setValue(thisRef: MutableMap<String, Any>, property: KProperty<*>, value: V) {
         thisRef[key ?: property.name] = value
     }
-
 }
