@@ -23,7 +23,7 @@ class KotlinJvmCompiledScript(
         internal val KotlinCompiledScript<*>.rawClasses: Map<String, ByteArray>
             get() = readRawClassesFromCompiledScript()
 
-        internal fun KotlinCompiledScript<*>.readRawClassesFromCompiledScript(): Map<String, ByteArray> {
+        private fun KotlinCompiledScript<*>.readRawClassesFromCompiledScript(): Map<String, ByteArray> {
             val jvmCompiledScript = this as KJvmCompiledScript
             val jvmCompiledModule = jvmCompiledScript.compiledModule as KJvmCompiledModuleInMemory
 
