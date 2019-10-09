@@ -9,13 +9,13 @@ import java.util.*
 internal class BlockingClassloaderTest : AnnotationSpec() {
 
     @Test
-    fun `loadClass - Blacklist empty`() {
+    fun `loadClass(String) - Blacklist empty`() {
         val bcl = BlockingClassloader(BlockingClassloaderTest::class.java.classLoader)
         bcl.loadClass(DummyClass::class.java.name) shouldBe DummyClass::class.java
     }
 
     @Test
-    fun `loadClass - Blacklist contains name of the requested Class`() {
+    fun `loadClass(String) - Blacklist contains name of the requested Class`() {
         val bcl = BlockingClassloader(BlockingClassloaderTest::class.java.classLoader, DummyClass::class.java.name)
         shouldThrow<BlockingClassloader.ClassBlockedException> {
             bcl.loadClass(DummyClass::class.java.name)
@@ -23,7 +23,7 @@ internal class BlockingClassloaderTest : AnnotationSpec() {
     }
 
     @Test
-    fun `loadClass - Blacklist contains package of the requested Class`() {
+    fun `loadClass(String) - Blacklist contains package of the requested Class`() {
         val bcl = BlockingClassloader(BlockingClassloaderTest::class.java.classLoader, "java.lang")
         shouldThrow<BlockingClassloader.PackageBlockedException> {
             bcl.loadClass(String::class.java.name)
