@@ -10,12 +10,13 @@ import kotlin.script.experimental.api.CompiledScript as KotlinCompiledScript
 var CompiledScript.jvmRawClasses: Map<String, ByteArray> by delegate(emptyMap())
 
 class KotlinJvmCompiledScript(
-        val compiledScript: KotlinCompiledScript<*>,
+        @Suppress("UNUSED")
+        val kotlinJvmCompiledScript: KotlinCompiledScript<*>,
         script: Script
 ) : CompiledScript(script) {
 
     init {
-        jvmRawClasses = compiledScript.rawClasses
+        jvmRawClasses = kotlinJvmCompiledScript.rawClasses
     }
 
     companion object {
