@@ -29,6 +29,18 @@ class DelegateClassloaderTest : AnnotationSpec() {
         val dcl = DelegateClassloader(DummyParent(), DummyDelegate())
         dcl.getResource("doesn't have") shouldBe URL("https://parent.mock")
     }
+
+    @Test
+    fun `getResources(String) - delegate has resource`() {
+        val dcl = DelegateClassloader(DummyParent(), DummyDelegate())
+        dcl.getResources("have") shouldBe DummyDelegateEnumeration()
+    }
+
+    @Test
+    fun `getResources(String) - delegate does not have resource`() {
+        val dcl = DelegateClassloader(DummyParent(), DummyDelegate())
+        dcl.getResources("doesn't have") shouldBe DummyParentEnumeration()
+    }
 }
 
 internal class DummyDelegate : ClassLoader() {
@@ -51,7 +63,7 @@ internal class DummyDelegate : ClassLoader() {
 internal class DummyParent : ClassLoader() {
     override fun loadClass(name: String?): Class<*> = DummyParentClass()::class.java
     override fun getResource(name: String?): URL? = URL("https://parent.mock")
-    override fun getResources(name: String?): Enumeration<URL> = DummyEnumeration()
+    override fun getResources(name: String?): Enumeration<URL> = DummyParentEnumeration()
 }
 
 internal class DummyDelegateClass
