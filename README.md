@@ -1,4 +1,4 @@
-master:[![Build Status 'master'](https://travis-ci.org/timaxinc/kcipt.svg?branch=master)](https://travis-ci.org/timaxinc/kcipt) develop: [![Build Status](https://travis-ci.org/timaxinc/kcipt.svg?branch=develop)](https://travis-ci.org/timaxinc/kcipt)
+master: [![Build Status 'master'](https://travis-ci.org/timaxinc/kcipt.svg?branch=master)](https://travis-ci.org/timaxinc/kcipt) develop: [![Build Status](https://travis-ci.org/timaxinc/kcipt.svg?branch=develop)](https://travis-ci.org/timaxinc/kcipt)
 
 # kcipt
 
