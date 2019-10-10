@@ -15,7 +15,7 @@ class DelegateClassloaderTest : AnnotationSpec() {
     @Test
     fun `loadClass(String) - delegate does not have Class`() {
         val dcl = DelegateClassloader(DummyParent(), DummyDelegate())
-        dcl.loadClass("don't have") shouldBe DummyParentClass::class.java
+        dcl.loadClass("doesn't have") shouldBe DummyParentClass::class.java
     }
 }
 
