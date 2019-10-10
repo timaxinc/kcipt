@@ -1,4 +1,8 @@
 language: generic
 
+cache:
+  directories:
+    - $HOME/.gradle
+
 script:
   - bash gradlew build
