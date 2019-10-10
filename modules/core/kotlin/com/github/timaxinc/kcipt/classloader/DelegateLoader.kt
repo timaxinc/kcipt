@@ -20,7 +20,7 @@ import java.util.*
 class DelegateClassloader(parent: ClassLoader, val delegate: ClassLoader): ClassLoader(parent) {
     /**
      * LoadClass loads the Class with the specified name from the delegate ClassLoader. If the delegate loader is unable
-     * to fetch the Class, loadClass will use the fallback parent ClassLoader.
+     * to load the Class, loadClass will use the fallback parent ClassLoader.
      *
      * @param name
      *          the name of the Class
@@ -32,6 +32,23 @@ class DelegateClassloader(parent: ClassLoader, val delegate: ClassLoader): Class
             delegate.loadClass(name)
         } catch (e: ClassNotFoundException) {
             parent.loadClass(name)
+        }
+    }
+
+    /**
+     * GetResource loads the resource with the given name from the delegate ClassLoader. If the delegate loader is
+     * unable to load the resource, getResource will use the fallback parent ClassLoader.
+     *
+     * @param name
+     *          the name of the resource
+     * @return
+     *          URL object for reading the resource; null if the resource could not be found, a URL could not be
+     *          constructed to locate the resource, the resource is in a package that is not opened unconditionally, or
+     *          access to the resource is denied by the security manager.
+     */
+    override fun getResource(name: String?): URL? {
+        return Objects.requireNonNullElseGet(delegate.getResource(name)) {
+            parent.getResource(name)
         }
     }
 }
