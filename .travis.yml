@@ -1,4 +1,4 @@
-language: minimal
+language: generic
 
 script:
-  - docker build -t kcipt .
+  - batch gradlew build
