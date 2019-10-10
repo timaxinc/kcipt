@@ -96,5 +96,4 @@ class DummyEnumeration : Enumeration<URL> {
     override fun nextElement(): URL {
         return URL("https://we.love.unicorns")
     }
-
 }
