@@ -1,7 +1,7 @@
 language: minimal
 cache:
   directories:
-    - /gradle
+    - $HOME/.gradle
 
 services:
   - docker
