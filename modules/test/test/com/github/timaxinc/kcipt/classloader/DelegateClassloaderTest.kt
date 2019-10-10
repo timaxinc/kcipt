@@ -33,13 +33,15 @@ class DelegateClassloaderTest : AnnotationSpec() {
     @Test
     fun `getResources(String) - delegate has resource`() {
         val dcl = DelegateClassloader(DummyParent(), DummyDelegate())
-        dcl.getResources("have") shouldBe DummyDelegateEnumeration()
+        val resources = dcl.getResources("have")
+        resources.nextElement() shouldBe URL("https://delegate.unicorn")
     }
 
     @Test
     fun `getResources(String) - delegate does not have resource`() {
         val dcl = DelegateClassloader(DummyParent(), DummyDelegate())
-        dcl.getResources("doesn't have") shouldBe DummyParentEnumeration()
+        val resources = dcl.getResources("doesn't have")
+        resources.nextElement() shouldBe URL("https://parent.unicorn")
     }
 }
 
