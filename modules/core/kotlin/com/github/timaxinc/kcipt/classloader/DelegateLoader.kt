@@ -51,4 +51,26 @@ class DelegateClassloader(parent: ClassLoader, val delegate: ClassLoader): Class
             parent.getResource(name)
         }
     }
+
+    /**
+     * GetResources loads all resources associated with the given name from the delegate ClassLoader. If the delegate
+     * loader is unable to load the resource, getResources will use the fallback parent ClassLoader.
+     *
+     * @param name
+     *          the name of the resources to load
+     * @return
+     *          An enumeration of URL objects for the resource. If no resources could be found, the enumeration will be
+     *          empty. Resources for which a URL cannot be constructed, are in package that is not opened
+     *          unconditionally, or access to the resource is denied by the security manager, are not returned in the
+     *          enumeration.
+     */
+    override fun getResources(name: String?): Enumeration<URL> {
+        val delegateResources = delegate.getResources(name)
+
+        return if (delegateResources.hasMoreElements()) {
+            delegateResources
+        } else {
+            parent.getResources(name)
+        }
+    }
 }
