@@ -1,10 +1,10 @@
-language: minimal
+language: generic
 cache:
   directories:
     - $HOME/.gradle
 
-services:
-  - docker
+jdk:
+  - oraclejdk11
 
 script:
-  - docker build -t kcipt .
+  - bash gradlew build
