@@ -19,8 +19,8 @@ A clear and concise description of what the bug is.
 A clear and concise description of what you expected to happen.
 
 **System Information:**
- - OS: [e.g. iOS]
- - Java Version and type: [e.g. openJDK 11]
+ - OS: [e.g. Pop!OS 19.04]
+ - Java version and vendor: [e.g. Oracle JDK 11.0.4]
 
 
 **Additional context**
