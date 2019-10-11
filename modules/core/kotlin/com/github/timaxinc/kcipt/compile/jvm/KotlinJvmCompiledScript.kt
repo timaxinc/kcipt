@@ -16,7 +16,7 @@ var CompiledScript.jvmRawClasses: Map<String, ByteArray> by delegate { mapOf<Str
  * [KotlinJvmCompiledScript] describes a kotlin script that was compiled on and for jvm.
  * Is a used as a bridge to [KotlinCompiledScript].
  *
- * @property kotlinJvmCompiledScript the CompiledScript from the Jetbrains kotlin script compiler
+ * @property kotlinJvmCompiledScript the CompiledScript from kotlin script compiler
  *
  * @constructor
  * @param script the source script that was compiled
