@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: ''
+title: "[BUG] "
 labels: bug
 assignees: ''
 
@@ -11,21 +11,16 @@ assignees: ''
 A clear and concise description of what the bug is.
 
 **To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+```kotlin
+// Put a code snippet in here that will reproduce the error, to help us find the cause
+```
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
-
-**Desktop (please complete the following information):**
+**System Information:**
  - OS: [e.g. iOS]
- - Version [e.g. 22]
+ - Java Version and type: [e.g. openJDK 11]
 
 
 **Additional context**
