@@ -28,8 +28,8 @@ val SourceSet.projectDefault: Project.() -> Unit
         when (this@projectDefault.name) {
             "main" -> {
                 java.srcDirs("src")
-                @Suppress("UnstableApiUsage") val processResources =
-                        tasks.getByName(processResourcesTaskName) as ProcessResources
+                @Suppress("UnstableApiUsage")
+                val processResources = tasks.getByName(processResourcesTaskName) as ProcessResources
                 processResources.from("resources") { include("**") }
                 processResources.from("src") { include("META-INF/**", "**/*.properties") }
             }

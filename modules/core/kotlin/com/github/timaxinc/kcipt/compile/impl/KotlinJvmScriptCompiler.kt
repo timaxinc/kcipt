@@ -9,6 +9,7 @@ import com.github.timaxinc.kcipt.result.createFailure
 import com.github.timaxinc.kcipt.result.createSuccess
 import kotlin.script.experimental.api.ResultWithDiagnostics
 import kotlin.script.experimental.api.resultOrNull
+import kotlin.script.experimental.api.valueOrNull
 import kotlin.script.experimental.host.toScriptSource
 import kotlin.script.experimental.jvmhost.BasicJvmScriptingHost
 import kotlin.script.experimental.jvmhost.createJvmCompilationConfigurationFromTemplate
@@ -21,9 +22,9 @@ class KotlinJvmScriptCompiler(private val scriptingHost: BasicJvmScriptingHost =
 
     override suspend fun invoke(script: Script): Result<CompiledScript, CompilerReport> {
         val compileResult: ResultWithDiagnostics<KotlinCompiledScript<*>> =
-                kotlinCompiler
-                        .invoke(script.text.toScriptSource(),
-                                createJvmCompilationConfigurationFromTemplate<SimpleScriptTemplate> {})
+                kotlinCompiler.invoke(
+                        script.text.toScriptSource(),
+                        createJvmCompilationConfigurationFromTemplate<SimpleScriptTemplate> {})
 
         return if (compileResult is ResultWithDiagnostics.Failure) {
             createFailure(compileResult.reports.map { KotlinJvmScriptCompilerReport(it) })
