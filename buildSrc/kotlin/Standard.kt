@@ -5,7 +5,6 @@ import util.dependsOnSubProjects
 import util.useProjectDefaultKotlinSourceSet
 
 fun KotlinBuildScript.normalGradleProject() {
-
     repositories {
         mavenCentral()
     }

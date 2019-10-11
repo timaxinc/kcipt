@@ -16,7 +16,6 @@ import java.util.*
  */
 class BlockingClassloader(parent: ClassLoader, private val blacklist: List<String>) : ClassLoader(parent) {
 
-
     /**
      * Creates a BlockingClassloader with the specified parent and a blacklist containing the passed elements.
      *

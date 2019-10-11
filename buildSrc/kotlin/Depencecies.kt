@@ -6,7 +6,6 @@ object Versions {
 }
 
 object Deps {
-
     val kotlin = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}"
     val kotlinCoroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlinCoroutines}"
     val klock = "com.soywiz:klock-jvm:${Versions.klock}"

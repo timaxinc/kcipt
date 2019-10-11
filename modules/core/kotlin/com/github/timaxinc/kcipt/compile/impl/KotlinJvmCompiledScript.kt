@@ -6,12 +6,9 @@ import org.jetbrains.kotlin.scripting.compiler.plugin.impl.KJvmCompiledModuleInM
 import kotlin.script.experimental.jvm.impl.KJvmCompiledScript
 import kotlin.script.experimental.api.CompiledScript as KotlinCompiledScript
 
-class KotlinJvmCompiledScript(
-        val compiledScript: KotlinCompiledScript<*>, script: Script
-) : CompiledScript(
+class KotlinJvmCompiledScript(val compiledScript: KotlinCompiledScript<*>, script: Script) : CompiledScript(
         script, compiledScript.rawClasses
 ) {
-
 
     companion object {
         internal val KotlinCompiledScript<*>.rawClasses: Map<String, ByteArray>

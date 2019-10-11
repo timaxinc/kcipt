@@ -4,6 +4,7 @@ import java.net.URL
 import java.util.*
 
 class URLEnumeration(private val enums: List<Enumeration<URL>>) : Enumeration<URL> {
+
     private var index: Int = 0
 
     override fun hasMoreElements(): Boolean = this.next()
@@ -27,5 +28,4 @@ class URLEnumeration(private val enums: List<Enumeration<URL>>) : Enumeration<UR
 
         return false
     }
-
 }
