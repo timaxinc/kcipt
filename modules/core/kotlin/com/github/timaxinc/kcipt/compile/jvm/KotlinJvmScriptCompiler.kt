@@ -8,15 +8,29 @@ import com.github.timaxinc.kcipt.result.Result
 import com.github.timaxinc.kcipt.result.createFailure
 import com.github.timaxinc.kcipt.result.createSuccess
 import kotlin.script.experimental.api.ResultWithDiagnostics
+import kotlin.script.experimental.api.ScriptCompiler
 import kotlin.script.experimental.api.valueOrNull
 import kotlin.script.experimental.host.toScriptSource
-import kotlin.script.experimental.jvmhost.BasicJvmScriptingHost
+import kotlin.script.experimental.jvm.defaultJvmScriptingHostConfiguration
+import kotlin.script.experimental.jvmhost.JvmScriptCompiler
 import kotlin.script.experimental.api.CompiledScript as KotlinCompiledScript
 
-class KotlinJvmScriptCompiler(private val scriptingHost: BasicJvmScriptingHost = BasicJvmScriptingHost()) : Compiler {
+/**
+ * [KotlinJvmScriptCompiler] is a [Compiler] implementation based on [JvmScriptCompiler]
+ *
+ * @property kotlinCompiler the Jetbrains [JvmScriptCompiler]
+ */
+class KotlinJvmScriptCompiler(
+        private val kotlinCompiler: ScriptCompiler = JvmScriptCompiler(defaultJvmScriptingHostConfiguration)
+) : Compiler {
 
-    private val kotlinCompiler = scriptingHost.compiler
-
+    /**
+     * Compiles a given [script]
+     *
+     * @param script the [Script] that will be compiled
+     * @return a [Result] in case a compiling succeeds a [Result.Success] containing a [CompiledScript] else a
+     * [Result.Failure] with reports of type [CompilerReport]
+     */
     override suspend fun invoke(script: Script): Result<CompiledScript, CompilerReport> {
         val compileResult: ResultWithDiagnostics<KotlinCompiledScript<*>> = kotlinCompiler.invoke(
                 script.text.toScriptSource(), script.configuration.kotlinJvmScriptCompilationConfiguration
