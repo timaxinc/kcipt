@@ -21,10 +21,9 @@ var CompiledScript.jvmRawClasses: Map<String, ByteArray> by delegate { mapOf<Str
  * @constructor
  * @param script the source script that was compiled
  */
-class KotlinJvmCompiledScript(
-        @Suppress("UNUSED")
-        val kotlinJvmCompiledScript: KotlinCompiledScript<*>, script: Script
-) : CompiledScript(script) {
+class KotlinJvmCompiledScript(val kotlinJvmCompiledScript: KotlinCompiledScript<*>, script: Script) : CompiledScript(
+        script
+) {
 
     init {
         jvmRawClasses = kotlinJvmCompiledScript.readRawClassesFromCompiledScript()
