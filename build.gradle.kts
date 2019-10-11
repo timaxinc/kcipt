@@ -8,13 +8,14 @@ version = "0.0.1"
 plugins {
     base
     idea
-    kotlin("jvm") version Versions.kotlin
+    kotlin("jvm") version Versions.kotlinPlugin
 }
 
 allprojects {
     repositories {
         jcenter()
         mavenCentral()
+        maven("https://kotlin.bintray.com/kotlin-dev")
         maven("https://kotlin.bintray.com/kotlinx")
         maven("https://dl.bintray.com/soywiz/soywiz")
         maven("https://mvnrepository.com/")
