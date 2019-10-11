@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import util.dependsOnSubProjects
+import util.dependsOnSubProjectsTask
 import util.jvmTarget
 
 version = "0.0.1"
