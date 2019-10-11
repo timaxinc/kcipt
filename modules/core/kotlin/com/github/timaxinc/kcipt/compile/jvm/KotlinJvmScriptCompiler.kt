@@ -9,6 +9,7 @@ import com.github.timaxinc.kcipt.result.createFailure
 import com.github.timaxinc.kcipt.result.createSuccess
 import kotlin.script.experimental.api.ResultWithDiagnostics
 import kotlin.script.experimental.api.ScriptCompiler
+import kotlin.script.experimental.api.ScriptDiagnostic
 import kotlin.script.experimental.api.valueOrNull
 import kotlin.script.experimental.host.toScriptSource
 import kotlin.script.experimental.jvm.defaultJvmScriptingHostConfiguration
@@ -29,7 +30,7 @@ class KotlinJvmScriptCompiler(
      *
      * @param script the [Script] that will be compiled
      * @return a [Result] in case a compiling succeeds a [Result.Success] containing a [CompiledScript] else a
-     * [Result.Failure] with reports of type [CompilerReport]
+     * [Result.Failure] with reports of type [KotlinJvmScriptCompilerReport] containing [ScriptDiagnostic]
      */
     override suspend fun invoke(script: Script): Result<CompiledScript, CompilerReport> {
         val compileResult: ResultWithDiagnostics<KotlinCompiledScript<*>> = kotlinCompiler.invoke(
