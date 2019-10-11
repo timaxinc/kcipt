@@ -47,17 +47,17 @@ class DelegateClassloaderTest : AnnotationSpec() {
 
 internal class DummyDelegate : ClassLoader() {
     override fun loadClass(name: String?): Class<*> {
-        if (name=="have") return DummyDelegateClass()::class.java
+        if (name == "have") return DummyDelegateClass()::class.java
         else throw ClassNotFoundException(name)
     }
 
     override fun getResource(name: String?): URL? {
-        return if (name=="have") URL("https://delegate.mock")
+        return if (name == "have") URL("https://delegate.mock")
         else null
     }
 
     override fun getResources(name: String?): Enumeration<URL> {
-        return if (name=="have") DummyDelegateEnumeration()
+        return if (name == "have") DummyDelegateEnumeration()
         else EmptyEnumeration()
     }
 }

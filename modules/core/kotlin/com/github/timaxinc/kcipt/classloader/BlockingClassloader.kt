@@ -16,6 +16,7 @@ import java.util.*
  */
 class BlockingClassloader(parent: ClassLoader, private val blacklist: List<String>) : ClassLoader(parent) {
 
+
     /**
      * Creates a BlockingClassloader with the specified parent and a blacklist containing the passed elements.
      *
@@ -42,13 +43,13 @@ class BlockingClassloader(parent: ClassLoader, private val blacklist: List<Strin
      *          in case the package containing the requested class is blocked.
      */
     override fun loadClass(name: String?): Class<*> {
-        if (name==null) {
+        if (name == null) {
             return super.loadClass(name)
         }
 
         when (val it = name startsWithMember blacklist) {
-            is Block.None -> return super.loadClass(name)
-            is Block.Exact -> throw ClassBlockedException(name)
+            is Block.None    -> return super.loadClass(name)
+            is Block.Exact   -> throw ClassBlockedException(name)
             is Block.Package -> throw PackageBlockedException(it.packageName)
         }
     }
@@ -99,13 +100,13 @@ class BlockingClassloader(parent: ClassLoader, private val blacklist: List<Strin
      *          the name of the class
      */
     private fun blockResourceCheck(name: String?) {
-        if (name==null) {
+        if (name == null) {
             return
         }
 
         when (val it = name startsWithMember blacklist) {
-            is Block.None -> return
-            is Block.Exact -> throw ResourceBlockedException(name)
+            is Block.None    -> return
+            is Block.Exact   -> throw ResourceBlockedException(name)
             is Block.Package -> throw PackageBlockedException(it.packageName)
         }
     }
@@ -123,7 +124,7 @@ class BlockingClassloader(parent: ClassLoader, private val blacklist: List<Strin
     private infix fun String.startsWithMember(list: List<String>): Block {
         list.forEach {
             if (this.startsWith(it)) {
-                if (this==it) return Block.Exact
+                if (this == it) return Block.Exact
                 return Block.Package(it)
             }
         }

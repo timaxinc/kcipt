@@ -7,12 +7,12 @@ import kotlin.script.experimental.jvmhost.impl.KJvmCompiledModuleInMemory
 import kotlin.script.experimental.api.CompiledScript as KotlinCompiledScript
 
 class KotlinJvmCompiledScript(
-        val compiledScript: KotlinCompiledScript<*>,
-        script: Script
+        val compiledScript: KotlinCompiledScript<*>, script: Script
 ) : CompiledScript(
-        script,
-        compiledScript.rawClasses
+        script, compiledScript.rawClasses
 ) {
+
+
     companion object {
         internal val KotlinCompiledScript<*>.rawClasses: Map<String, ByteArray>
             get() = readRawClassesFromCompiledScript()
@@ -24,9 +24,7 @@ class KotlinJvmCompiledScript(
             val compilerOutputFiles = kJvmCompiledModuleInMemory.compilerOutputFiles
 
             return compilerOutputFiles.filterKeys { it.endsWith(".class") }.map {
-                it.key.removeSuffix(".class")
-                        .replace("/", ".")
-                        .replace("\\", ".") to it.value
+                it.key.removeSuffix(".class").replace("/", ".").replace("\\", ".") to it.value
             }.toMap()
         }
     }
