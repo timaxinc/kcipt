@@ -17,7 +17,16 @@ import java.util.*
  * @param parent
  *          the fallback, parent ClassLoader
  */
-class DelegateClassloader(parent: ClassLoader, val delegate: ClassLoader): ClassLoader(parent) {
+class DelegateClassloader(parent: ClassLoader, private var delegate: ClassLoader): ClassLoader(parent) {
+    /**
+    * Replace replaces the delegate CLassloader with the passed ClassLoader.
+    *
+    * @param delegate
+    *           the ClassLoader, used to replace the current delegate ClassLoader
+    */
+    fun replace(delegate: ClassLoader) {
+        this.delegate = delegate
+    }
     /**
      * LoadClass loads the Class with the specified name from the delegate ClassLoader. If the delegate loader is unable
      * to load the Class, loadClass will use the fallback parent ClassLoader.
