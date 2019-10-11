@@ -4,6 +4,7 @@ import java.net.URL
 import java.util.*
 
 class StackClassloader(private val loaders: MutableList<ClassLoader>) : ClassLoader() {
+
     constructor(vararg loader: ClassLoader) : this(loader.toMutableList())
 
     fun add(loader: ClassLoader) = loaders.add(loader)

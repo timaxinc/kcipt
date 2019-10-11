@@ -45,7 +45,6 @@ internal class BlockingClassloaderTest : AnnotationSpec() {
         }
     }
 
-
     @Test
     fun `getResource(String) - Package on Blacklist`() {
         val bcl = BlockingClassloader(DummyLoader(), "blocked.path")
@@ -53,6 +52,7 @@ internal class BlockingClassloaderTest : AnnotationSpec() {
             bcl.getResource("blocked.path.DummyValue")
         }
     }
+
 
     @Test
     fun `getResources(String) - No Blacklist`() {
@@ -78,17 +78,19 @@ internal class BlockingClassloaderTest : AnnotationSpec() {
     }
 }
 
-val dummyUrl = URL("https://i.am.mocked")
+internal val dummyUrl = URL("https://i.am.mocked")
 
-class DummyLoader : ClassLoader() {
+internal class DummyLoader : ClassLoader() {
+
     override fun loadClass(name: String?): Class<*> = DummyClass()::class.java
     override fun getResource(name: String?): URL? = URL("https://i.am.mocked")
     override fun getResources(name: String?): Enumeration<URL> = DummyEnumeration()
 }
 
-class DummyClass
+internal class DummyClass
 
-class DummyEnumeration : Enumeration<URL> {
+internal class DummyEnumeration : Enumeration<URL> {
+
     override fun hasMoreElements(): Boolean {
         return true
     }

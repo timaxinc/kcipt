@@ -3,6 +3,7 @@ package com.github.timaxinc.kcipt.util.io
 import kotlin.reflect.KClass
 
 class Resource(path: String, context: KClass<*>? = null) {
+
     private val pre: String = if (!path.startsWith("/")) "/" else ""
 
     val url =
@@ -16,4 +17,3 @@ class Resource(path: String, context: KClass<*>? = null) {
 
     fun readText() = url.readText()
 }
-

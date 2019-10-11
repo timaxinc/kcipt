@@ -19,7 +19,6 @@ import java.util.*
  */
 class DelegateClassloader(parent: ClassLoader, private var delegate: ClassLoader) : ClassLoader(parent) {
 
-
     /**
      * Replace replaces the delegate CLassloader with the passed ClassLoader.
      *
