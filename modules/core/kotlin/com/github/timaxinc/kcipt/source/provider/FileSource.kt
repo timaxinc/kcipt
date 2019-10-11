@@ -9,13 +9,11 @@ class FileSource(private val file: File) : MutableSource<String> {
     constructor(path: String) : this(File(path))
 
     override fun write(t: String) {
-        if (file.setupAsMutableFile())
-            file.writeText(t)
+        if (file.setupAsMutableFile()) file.writeText(t)
     }
 
     override fun read(): String {
-        if (file.setupAsMutableFile())
-            return file.readText()
+        if (file.setupAsMutableFile()) return file.readText()
         return ""
     }
 }

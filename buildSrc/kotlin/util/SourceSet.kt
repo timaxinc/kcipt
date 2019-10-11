@@ -5,8 +5,7 @@ import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.language.jvm.tasks.ProcessResources
 
-inline fun Project.sourceSets(crossinline body: SourceSetsBuilder.() -> Unit) =
-        SourceSetsBuilder(this).body()
+inline fun Project.sourceSets(crossinline body: SourceSetsBuilder.() -> Unit) = SourceSetsBuilder(this).body()
 
 class SourceSetsBuilder(val project: Project) {
 

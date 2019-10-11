@@ -1,5 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import util.*
+import util.dependsOnSubProjects
+import util.dependsOnSubProjectsTask
+import util.jvmTarget
 
 version = "0.0.1"
 
@@ -33,11 +35,9 @@ subprojects {
             kotlinOptions.jvmTarget = "1.8"
         }
         "jar"(Jar::class) {
-            @Suppress("UnstableApiUsage")
-            archiveFileName.set(
+            @Suppress("UnstableApiUsage") archiveFileName.set(
                     "${rootProject.name}${this@subprojects.path.replace(
-                            ":",
-                            "-"
+                            ":", "-"
                     )}-${this@subprojects.version}.jar"
             )
         }
@@ -58,8 +58,7 @@ tasks {
     }
     "jar"(Jar::class) {
         dependsOnSubProjectsTask()
-        @Suppress("UnstableApiUsage")
-        archiveFileName.set("${rootProject.name}-${rootProject.version}.jar")
+        @Suppress("UnstableApiUsage") archiveFileName.set("${rootProject.name}-${rootProject.version}.jar")
     }
 }
 
@@ -72,12 +71,9 @@ val copySubProjectJars = task("copySubProjectJars", Copy::class) {
 val copyDependenciesJars = task("copyDependenciesJars", Copy::class) {
     includeEmptyDirs = true
     subprojects.forEach {
-        @Suppress("UnstableApiUsage")
-        from(
-                it.configurations.archives.map {
-                    it.asFileTree
-                }
-        )
+        @Suppress("UnstableApiUsage") from(it.configurations.archives.map {
+            it.asFileTree
+        })
     }
     into("$buildDir/libs")
 }

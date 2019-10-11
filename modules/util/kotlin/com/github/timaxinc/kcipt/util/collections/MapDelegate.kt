@@ -17,13 +17,14 @@ class MutableMapDelegate<V : Any> internal constructor(
 ) {
 
     operator fun getValue(thisRef: Map<String, Any>, property: KProperty<*>): V {
-        val key = key ?: property.name
+        val key =
+                key
+                ?: property.name
         val valueInConfiguration = thisRef[key]
         return run {
             if (valueInConfiguration != null) {
                 try {
-                    @Suppress("UNCHECKED_CAST")
-                    valueInConfiguration as V
+                    @Suppress("UNCHECKED_CAST") valueInConfiguration as V
                 } catch (classCastException: ClassCastException) {
                     storeAndGetDefault(thisRef, key)
                 }
@@ -42,7 +43,8 @@ class MutableMapDelegate<V : Any> internal constructor(
     }
 
     operator fun setValue(thisRef: MutableMap<String, Any>, property: KProperty<*>, value: V) {
-        thisRef[key ?: property.name] = value
+        thisRef[key
+                ?: property.name] = value
     }
 
     class NoValueFoundException(key: String) : Exception("No value mapped to $key")

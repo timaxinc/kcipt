@@ -11,8 +11,7 @@ var CompiledScript.jvmRawClasses: Map<String, ByteArray> by delegate { mapOf<Str
 
 class KotlinJvmCompiledScript(
         @Suppress("UNUSED")
-        val kotlinJvmCompiledScript: KotlinCompiledScript<*>,
-        script: Script
+        val kotlinJvmCompiledScript: KotlinCompiledScript<*>, script: Script
 ) : CompiledScript(script) {
 
     init {
@@ -30,9 +29,7 @@ class KotlinJvmCompiledScript(
             val compilerOutputFiles = jvmCompiledModule.compilerOutputFiles
 
             return compilerOutputFiles.filterKeys { it.endsWith(".class") }.map {
-                it.key.removeSuffix(".class")
-                        .replace("/", ".")
-                        .replace("\\", ".") to it.value
+                it.key.removeSuffix(".class").replace("/", ".").replace("\\", ".") to it.value
             }.toMap()
         }
     }
