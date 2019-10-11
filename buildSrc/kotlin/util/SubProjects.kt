@@ -8,8 +8,7 @@ import org.gradle.kotlin.dsl.project
 fun Task.dependsOnSubProjectsTask(name: String) {
     project.subprojects.forEach {
         val task = it.tasks.findByPath(project.name + ":" + name)
-        if (task!=null)
-            dependsOn(task)
+        if (task != null) dependsOn(task)
     }
 }
 

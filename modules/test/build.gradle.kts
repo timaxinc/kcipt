@@ -8,7 +8,6 @@ dependencies {
 }
 
 tasks.test {
-    @Suppress("UnstableApiUsage")
     useJUnitPlatform()
     testLogging {
         events("passed", "skipped", "failed")

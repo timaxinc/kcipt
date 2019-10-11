@@ -5,8 +5,7 @@ import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.language.jvm.tasks.ProcessResources
 
-inline fun Project.sourceSets(crossinline body: SourceSetsBuilder.() -> Unit) =
-        SourceSetsBuilder(this).body()
+inline fun Project.sourceSets(crossinline body: SourceSetsBuilder.() -> Unit) = SourceSetsBuilder(this).body()
 
 class SourceSetsBuilder(val project: Project) {
 
@@ -29,8 +28,8 @@ val SourceSet.projectDefault: Project.() -> Unit
         when (this@projectDefault.name) {
             "main" -> {
                 java.srcDirs("src")
-                @Suppress("UnstableApiUsage")
-                val processResources = tasks.getByName(processResourcesTaskName) as ProcessResources
+                @Suppress("UnstableApiUsage") val processResources =
+                        tasks.getByName(processResourcesTaskName) as ProcessResources
                 processResources.from("resources") { include("**") }
                 processResources.from("src") { include("META-INF/**", "**/*.properties") }
             }

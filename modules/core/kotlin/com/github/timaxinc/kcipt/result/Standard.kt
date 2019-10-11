@@ -14,8 +14,7 @@ inline fun <V, R> Result<V, R>.onFailure(body: Result.Failure<V, R>.() -> Unit):
     return this
 }
 
-fun <V, R> V.asSuccess(reports: List<R> = listOf()): Result.Success<V, R> =
-        createSuccess(this,  reports)
+fun <V, R> V.asSuccess(reports: List<R> = listOf()): Result.Success<V, R> = createSuccess(this, reports)
 
 fun <V, R> createSuccess(value: V, reports: List<R> = listOf()) = Result.Success(value, reports)
 
