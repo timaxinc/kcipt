@@ -7,7 +7,7 @@ import org.jetbrains.kotlin.scripting.compiler.plugin.impl.KJvmCompiledModuleInM
 import kotlin.script.experimental.jvm.impl.KJvmCompiledScript
 import kotlin.script.experimental.api.CompiledScript as KotlinCompiledScript
 
-var CompiledScript.jvmRawClasses: Map<String, ByteArray> by delegate(emptyMap())
+var CompiledScript.jvmRawClasses: Map<String, ByteArray> by delegate { mapOf<String, ByteArray>() }
 
 class KotlinJvmCompiledScript(
         @Suppress("UNUSED")
