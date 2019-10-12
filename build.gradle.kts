@@ -51,7 +51,7 @@ dependencies {
 tasks {
     "build" {
         dependsOnSubProjectsTask()
-        finalizedBy("copySubProjectJars")
+        finalizedBy("afterBuild")
     }
     "clean" {
         dependsOnSubProjectsTask()
@@ -60,6 +60,14 @@ tasks {
         dependsOnSubProjectsTask()
         @Suppress("UnstableApiUsage") archiveFileName.set("${rootProject.name}-${rootProject.version}.jar")
     }
+}
+
+val afterBuild = task("afterBuild") {
+    dependsOn("copySubProjectJars")
+    dependsOn("copyDependenciesJars")
+    dependsOn("copyStaticIntoDist")
+    dependsOn("copyLibsIntoDist")
+    dependsOn("copyDistIntoRun")
 }
 
 val copySubProjectJars = task("copySubProjectJars", Copy::class) {
@@ -71,9 +79,33 @@ val copySubProjectJars = task("copySubProjectJars", Copy::class) {
 val copyDependenciesJars = task("copyDependenciesJars", Copy::class) {
     includeEmptyDirs = true
     subprojects.forEach {
-        @Suppress("UnstableApiUsage") from(it.configurations.archives.map {
+        from(it.configurations.compile.map {
             it.asFileTree
         })
     }
     into("$buildDir/libs")
 }
+
+val copyDependenciesJars = task("copyStaticIntoDist", Sync::class) {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    from("static")
+    into("$buildDir/dist")
+}
+
+val copyLibsIntoDist = task("copyLibsIntoDist", Sync::class) {
+    dependsOn("copySubProjectJars")
+    dependsOn("copyDependenciesJars")
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    from("$buildDir/libs")
+    into("$buildDir/dist/lib")
+}
+
+val copyDistIntoRun = task("copyDistIntoRun", Sync::class) {
+    dependsOn("copyStaticIntoDist")
+    dependsOn("copyLibsIntoDist")
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    from("$buildDir/dist")
+    into("run")
+}
+
+normalGradleProject()
