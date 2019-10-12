@@ -13,7 +13,6 @@ import kotlin.script.experimental.host.toScriptSource
 import kotlin.script.experimental.jvm.JvmDependencyFromClassLoader
 import kotlin.script.experimental.jvm.defaultJvmScriptingHostConfiguration
 import kotlin.script.experimental.jvmhost.JvmScriptCompiler
-import kotlin.script.experimental.api.CompiledScript as KotlinCompiledScript
 
 /**
  * [KotlinJvmScriptCompiler] is a [Compiler] implementation based on [JvmScriptCompiler]
@@ -32,26 +31,22 @@ class KotlinJvmScriptCompiler(
      * [Result.Failure] with reports of type [KotlinJvmScriptCompilerReport] containing [ScriptDiagnostic]
      */
     override suspend fun invoke(script: Script): Result<CompiledScript, CompilerReport> {
-        val compileResult: ResultWithDiagnostics<KotlinCompiledScript<*>> = kotlinCompiler.invoke(script.text.toScriptSource(),
-                                                                                                  ScriptCompilationConfiguration(
-                                                                                                          script.configuration.kotlinJvmScriptCompilationConfiguration
-                                                                                                  ) {
-                                                                                                      implicitReceivers.update {
-                                                                                                          //TODO add check if contextClass is child class of ScriptContext
-                                                                                                          if (it == null || it.isEmpty()) listOf(
-                                                                                                                  KotlinType(
-                                                                                                                          script.configuration.contextClass
-                                                                                                                  )
-                                                                                                          ) else it
-                                                                                                      }
-                                                                                                      dependencies.apply {
-                                                                                                          append(JvmDependencyFromClassLoader {
-                                                                                                              //TODO replace with blocking class Loader(maybe in soft mode) just whitelisting script context class
-                                                                                                              script.configuration.contextClass.java.classLoader
-                                                                                                          })
-                                                                                                          append(script.configuration.kotlinJvmScriptDependencies)
-                                                                                                      }
-                                                                                                  })
+        val baseConfigurations = script.configuration.kotlinJvmScriptCompilationConfiguration
+        val scriptCompilationConfiguration = ScriptCompilationConfiguration(baseConfigurations) {
+            implicitReceivers.update {
+                //TODO add check if contextClass is child class of ScriptContext
+                if (it == null || it.isEmpty()) listOf(KotlinType(script.configuration.contextClass)) else it
+            }
+            dependencies.apply {
+                append(JvmDependencyFromClassLoader {
+                    //TODO replace with blocking class Loader(maybe in soft mode) just whitelisting script context class
+                    script.configuration.contextClass.java.classLoader
+                })
+                append(script.configuration.kotlinJvmScriptDependencies)
+            }
+        }
+
+        val compileResult = kotlinCompiler.invoke(script.text.toScriptSource(), scriptCompilationConfiguration)
 
         return if (compileResult is ResultWithDiagnostics.Failure) {
             createFailure(compileResult.reports.map { KotlinJvmScriptCompilerReport(it) })
