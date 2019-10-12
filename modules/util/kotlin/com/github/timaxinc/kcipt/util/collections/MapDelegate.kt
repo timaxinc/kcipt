@@ -11,7 +11,8 @@ import kotlin.reflect.KProperty
  * @param defaultValueFactoryBlock lambda that creates the default value of the created [MutableMapDelegate]
  * @return the created [MutableMapDelegate]
  */
-fun <V : Any> delegate(defaultValueFactoryBlock: () -> V): MutableMapDelegate<V> = MutableMapDelegate(factory(defaultValueFactoryBlock))
+fun <V : Any> delegate(defaultValueFactoryBlock: () -> V): MutableMapDelegate<V> =
+        MutableMapDelegate(factory(defaultValueFactoryBlock))
 
 /**
  * creates a [MutableMapDelegate]
@@ -20,7 +21,8 @@ fun <V : Any> delegate(defaultValueFactoryBlock: () -> V): MutableMapDelegate<V>
  * @param defaultValueFactory [Factory] that creates the default value of the created [MutableMapDelegate]
  * @return the created [MutableMapDelegate]
  */
-fun <V : Any> delegate(defaultValueFactory: Factory<V>? = null): MutableMapDelegate<V> = MutableMapDelegate(defaultValueFactory)
+fun <V : Any> delegate(defaultValueFactory: Factory<V>? = null): MutableMapDelegate<V> =
+        MutableMapDelegate(defaultValueFactory)
 
 /**
  * used to delegate a property to a [Map] with key type [String]
@@ -31,7 +33,9 @@ fun <V : Any> delegate(defaultValueFactory: Factory<V>? = null): MutableMapDeleg
  * @property key the key in [Map] if null it uses property's name
  */
 class MutableMapDelegate<V : Any> internal constructor(
-        private val defaultValueFactory: Factory<V>? = null, private val storeDefault: Boolean = true, private val key: String? = null
+        private val defaultValueFactory: Factory<V>? = null,
+        private val storeDefault: Boolean = true,
+        private val key: String? = null
 ) {
 
     /**
