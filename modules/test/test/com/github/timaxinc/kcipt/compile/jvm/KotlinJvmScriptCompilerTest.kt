@@ -40,10 +40,9 @@ class KotlinJvmScriptCompilerTest : AnnotationSpec() {
             value.jvmRawClasses.entries.first().key shouldBe "Script"
             value.jvmRawClasses.entries.first().value.isNotEmpty() shouldBe true
             val scriptBytecodeAsString = String(value.jvmRawClasses.entries.first().value)
-            val qualifiedNameOfUnicornDummyScriptContextInBytecode = UnicornDummyScriptContext::class.qualifiedName!!.replace(
-                    ".",
-                    "/"
-            )
+            val qualifiedNameOfUnicornDummyScriptContextInBytecode = run {
+                UnicornDummyScriptContext::class.qualifiedName!!.replace(".", "/")
+            }
             scriptBytecodeAsString shouldContain qualifiedNameOfUnicornDummyScriptContextInBytecode
             return
         }
