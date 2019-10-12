@@ -3,7 +3,9 @@ package com.github.timaxinc.kcipt.classloader
 import java.net.URL
 import java.util.*
 
-class StackClassloader(private val loaders: MutableList<ClassLoader>) : ClassLoader() {
+class StackClassloader(
+        private val loaders: MutableList<ClassLoader>, parent: ClassLoader? = null
+) : ClassLoader(parent) {
 
     constructor(vararg loader: ClassLoader) : this(loader.toMutableList())
 

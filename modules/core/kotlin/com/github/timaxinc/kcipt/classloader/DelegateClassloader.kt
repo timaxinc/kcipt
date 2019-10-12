@@ -17,7 +17,7 @@ import java.util.*
  * @param parent
  *          the fallback, parent ClassLoader
  */
-class DelegateClassloader(parent: ClassLoader, private var delegate: ClassLoader) : ClassLoader(parent) {
+class DelegateClassloader(private var delegate: ClassLoader, parent: ClassLoader? = null) : ClassLoader(parent) {
 
     /**
      * Replace replaces the delegate CLassloader with the passed ClassLoader.

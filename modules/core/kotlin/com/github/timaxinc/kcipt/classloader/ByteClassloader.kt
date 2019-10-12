@@ -14,7 +14,10 @@ package com.github.timaxinc.kcipt.classloader
  * @param parent
  *          The parent ClassLoader of the ByteClassloader
  */
-class ByteClassloader(parent: ClassLoader, private val classDefs: Map<String, ByteArray>) : ClassLoader(parent) {
+class ByteClassloader(
+        private val classDefs: Map<String, ByteArray>,
+        parent: ClassLoader? = null
+) : ClassLoader(parent) {
 
     /**
      * Finds the Class with the specified name and returns it.
