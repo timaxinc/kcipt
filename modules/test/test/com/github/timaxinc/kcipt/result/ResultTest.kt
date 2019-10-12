@@ -5,7 +5,7 @@ import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.AnnotationSpec
 
-class ResultTest : AnnotationSpec() {
+internal class ResultTest : AnnotationSpec() {
 
     @Test
     fun `TEST - handel successful result`() {

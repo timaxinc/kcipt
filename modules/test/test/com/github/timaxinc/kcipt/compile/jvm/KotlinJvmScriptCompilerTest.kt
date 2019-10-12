@@ -11,7 +11,7 @@ import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.AnnotationSpec
 
-class KotlinJvmScriptCompilerTest : AnnotationSpec() {
+internal class KotlinJvmScriptCompilerTest : AnnotationSpec() {
 
     val simpleTestScriptSourcecode = "print(\"love ... shakreva.\uD83E\uDD84\")"
     val simpleTestScriptSourcecodeWithSyntaxError = "print(\"love ... shakreva.\uD83E\uDD84\""

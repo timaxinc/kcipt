@@ -5,7 +5,7 @@ import com.github.timaxinc.kcipt.source.provider.source
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.AnnotationSpec
 
-class LambdaSourcesTest : AnnotationSpec() {
+internal class LambdaSourcesTest : AnnotationSpec() {
 
     @Test
     fun `TEST - read from source`() {
