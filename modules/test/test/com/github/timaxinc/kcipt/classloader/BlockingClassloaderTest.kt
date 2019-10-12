@@ -78,18 +78,18 @@ internal class BlockingClassloaderTest : AnnotationSpec() {
     }
 }
 
-internal val dummyUrl = URL("https://i.am.mocked")
+private val dummyUrl = URL("https://i.am.mocked")
 
-internal class DummyLoader : ClassLoader() {
+private class DummyLoader : ClassLoader() {
 
     override fun loadClass(name: String?): Class<*> = DummyClass()::class.java
     override fun getResource(name: String?): URL? = URL("https://i.am.mocked")
     override fun getResources(name: String?): Enumeration<URL> = DummyEnumeration()
 }
 
-internal class DummyClass
+private class DummyClass
 
-internal class DummyEnumeration : Enumeration<URL> {
+private class DummyEnumeration : Enumeration<URL> {
 
     override fun hasMoreElements(): Boolean {
         return true

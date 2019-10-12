@@ -66,17 +66,17 @@ internal class DummyDelegate : ClassLoader() {
     }
 }
 
-internal class DummyParent : ClassLoader() {
+private class DummyParent : ClassLoader() {
 
     override fun loadClass(name: String?): Class<*> = DummyParentClass()::class.java
     override fun getResource(name: String?): URL? = URL("https://parent.mock")
     override fun getResources(name: String?): Enumeration<URL> = DummyParentEnumeration()
 }
 
-internal class DummyDelegateClass
-internal class DummyParentClass
+private class DummyDelegateClass
+private class DummyParentClass
 
-internal class EmptyEnumeration : Enumeration<URL> {
+private class EmptyEnumeration : Enumeration<URL> {
 
     override fun hasMoreElements(): Boolean {
         return false
@@ -87,7 +87,7 @@ internal class EmptyEnumeration : Enumeration<URL> {
     }
 }
 
-internal class DummyDelegateEnumeration : Enumeration<URL> {
+private class DummyDelegateEnumeration : Enumeration<URL> {
 
     override fun hasMoreElements(): Boolean {
         return true
@@ -98,7 +98,7 @@ internal class DummyDelegateEnumeration : Enumeration<URL> {
     }
 }
 
-internal class DummyParentEnumeration : Enumeration<URL> {
+private class DummyParentEnumeration : Enumeration<URL> {
 
     override fun hasMoreElements(): Boolean {
         return true
