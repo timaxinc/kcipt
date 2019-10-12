@@ -1,6 +1,13 @@
 package com.github.timaxinc.kcipt.util.factory
 
 /**
+ * creates a [DynamicLambdaFactory] with [block]
+ *
+ * @param block the lambda used to create the object
+ */
+fun <P, T> dynamicFactory(block: (P) -> T) = DynamicLambdaFactory<P, T>(block)
+
+/**
  * implementation of [DynamicFactory] that uses a lambda [block] to create a object
  *
  * @property block the lambda used to create the object
