@@ -8,7 +8,7 @@ import io.kotlintest.specs.AnnotationSpec
 class LambdaSourcesTest : AnnotationSpec() {
 
     @Test
-    fun `read from source`() {
+    fun `TEST - read from source`() {
         val value = "unicorn"
         val source = source {
             value
@@ -17,7 +17,7 @@ class LambdaSourcesTest : AnnotationSpec() {
     }
 
     @Test
-    fun `read and write from and to source`() {
+    fun `TEST - read and write from and to source`() {
         var value = "unicorn"
         val source = mutableSource(readBlock = {
             value
