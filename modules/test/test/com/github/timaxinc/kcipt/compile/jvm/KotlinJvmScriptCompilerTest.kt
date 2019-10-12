@@ -4,6 +4,7 @@ import ScriptContext
 import com.github.timaxinc.kcipt.ScriptConfiguration
 import com.github.timaxinc.kcipt.TextScript
 import com.github.timaxinc.kcipt.contextClass
+import com.github.timaxinc.kcipt.result.onFailure
 import com.github.timaxinc.kcipt.result.onSuccess
 import io.kotlintest.fail
 import io.kotlintest.matchers.string.shouldContain
@@ -13,6 +14,7 @@ import io.kotlintest.specs.AnnotationSpec
 class KotlinJvmScriptCompilerTest : AnnotationSpec() {
 
     val simpleTestScriptSourcecode = "print(\"love ... shakreva.\uD83E\uDD84\")"
+    val simpleTestScriptSourcecodeWithSyntaxError = "print(\"love ... shakreva.\uD83E\uDD84\""
 
     @Test
     suspend fun `simple script compilation`() {
@@ -26,6 +28,20 @@ class KotlinJvmScriptCompilerTest : AnnotationSpec() {
             return
         }
         fail("shouldn't be reachable")
+    }
+
+    @Test
+    suspend fun `simple script compilation with syntax error`() {
+        val script = TextScript(simpleTestScriptSourcecodeWithSyntaxError, ScriptConfiguration { })
+        val compiler = KotlinJvmScriptCompiler()
+        val result = compiler(script)
+        result.onFailure {
+            //TODO only count error level reports
+            reports.size shouldBe 3
+        }
+        result.onSuccess {
+            fail("shouldn't be reachable")
+        }
     }
 
     @Test
