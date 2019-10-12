@@ -6,7 +6,7 @@ import com.github.timaxinc.kcipt.TextScript
 import com.github.timaxinc.kcipt.contextClass
 import com.github.timaxinc.kcipt.result.onFailure
 import com.github.timaxinc.kcipt.result.onSuccess
-import io.kotlintest.fail
+import com.github.timaxinc.kcipt.test.notReachable
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.AnnotationSpec
@@ -27,7 +27,7 @@ class KotlinJvmScriptCompilerTest : AnnotationSpec() {
             value.jvmRawClasses.entries.first().value.isNotEmpty() shouldBe true
             return
         }
-        fail("shouldn't be reachable")
+        notReachable()
     }
 
     @Test
@@ -40,7 +40,7 @@ class KotlinJvmScriptCompilerTest : AnnotationSpec() {
             reports.size shouldBe 3
         }
         result.onSuccess {
-            fail("shouldn't be reachable")
+            notReachable()
         }
     }
 
@@ -62,7 +62,7 @@ class KotlinJvmScriptCompilerTest : AnnotationSpec() {
             scriptBytecodeAsString shouldContain qualifiedNameOfUnicornDummyScriptContextInBytecode
             return
         }
-        fail("shouldn't be reachable")
+        notReachable()
     }
 }
 
