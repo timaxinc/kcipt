@@ -8,7 +8,7 @@ import io.kotlintest.specs.AnnotationSpec
 class ResultTest : AnnotationSpec() {
 
     @Test
-    fun `simple successful result`() {
+    fun `TEST - handel successful result`() {
         createSuccess<DummyValue, DummyReport>(DummyValue).onFailure {
             notReachable()
         }.onSuccess {
@@ -19,7 +19,7 @@ class ResultTest : AnnotationSpec() {
     }
 
     @Test
-    fun `simple successful result with report`() {
+    fun `TEST - handel successful result with reports`() {
         val dummyReport = DummyReport("unicorn")
         createSuccess<DummyValue, DummyReport>(DummyValue, listOf(dummyReport)).onFailure {
             notReachable()
@@ -32,7 +32,7 @@ class ResultTest : AnnotationSpec() {
     }
 
     @Test
-    fun `simple failed result with report`() {
+    fun `TEST - handel failed result with report`() {
         val dummyReport = DummyReport("unicorn")
         createFailure<DummyValue, DummyReport>(listOf(dummyReport)).onFailure {
             reports shouldContain dummyReport
