@@ -12,7 +12,6 @@ fun <T> source(readBlock: () -> T) = LambdaSource<T>(readBlock)
 /**
  * [Source] implementation that uses a lambda to implement [read]
  *
- * @param T
  * @property readBlock
  */
 class LambdaSource<T>(private val readBlock: () -> T) : Source<T> {
