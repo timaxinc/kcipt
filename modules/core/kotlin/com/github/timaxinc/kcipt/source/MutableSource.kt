@@ -8,7 +8,7 @@ package com.github.timaxinc.kcipt.source
 interface MutableSource<T> : Source<T> {
 
     /**
-     * writes [t]
+     * writes [t] of Type [T]
      * after call [read] should return a object equal to the written one
      *
      * @param t object to write
