@@ -17,7 +17,7 @@ class KotlinJvmScriptCompilerTest : AnnotationSpec() {
     val simpleTestScriptSourcecodeWithSyntaxError = "print(\"love ... shakreva.\uD83E\uDD84\""
 
     @Test
-    suspend fun `simple script compilation`() {
+    suspend fun `INT - compile script on jvm with default configuration`() {
         val script = TextScript(simpleTestScriptSourcecode, ScriptConfiguration { })
         val compiler = KotlinJvmScriptCompiler()
         val result = compiler(script)
@@ -31,7 +31,7 @@ class KotlinJvmScriptCompilerTest : AnnotationSpec() {
     }
 
     @Test
-    suspend fun `simple script compilation with syntax error`() {
+    suspend fun `INT - compile script with syntax error on jvm with default configuration`() {
         val script = TextScript(simpleTestScriptSourcecodeWithSyntaxError, ScriptConfiguration { })
         val compiler = KotlinJvmScriptCompiler()
         val result = compiler(script)
@@ -45,7 +45,7 @@ class KotlinJvmScriptCompilerTest : AnnotationSpec() {
     }
 
     @Test
-    suspend fun `simple script compilation with custom context`() {
+    suspend fun `INT - compile script on jvm with custom script context`() {
         val script = TextScript(simpleTestScriptSourcecode, ScriptConfiguration {
             contextClass = UnicornDummyScriptContext::class
         })
