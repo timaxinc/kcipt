@@ -11,7 +11,7 @@ internal class FileSourceTest : AnnotationSpec() {
     private val virtualFileSystem = Jimfs.newFileSystem(Configuration.unix())
 
     @AfterClass
-    fun closeVirtualFileSystem() {
+    fun afterClass() {
         virtualFileSystem.close()
     }
 
