@@ -5,24 +5,24 @@ import com.github.timaxinc.kcipt.util.factory.factory
 import kotlin.reflect.KProperty
 
 /**
- * creates a [MutableMapDelegate]
+ * creates a [MapDelegate]
  *
- * @param V type of [MutableMapDelegate] value
- * @param defaultValueFactoryBlock lambda that creates the default value of the created [MutableMapDelegate]
- * @return the created [MutableMapDelegate]
+ * @param V type of [MapDelegate] value
+ * @param defaultValueFactoryBlock lambda that creates the default value of the created [MapDelegate]
+ * @return the created [MapDelegate]
  */
-fun <V : Any> delegate(defaultValueFactoryBlock: () -> V): MutableMapDelegate<V> =
-        MutableMapDelegate(factory(defaultValueFactoryBlock))
+fun <V : Any> delegate(storeDefault: Boolean = true, defaultValueFactoryBlock: () -> V): MapDelegate<V> =
+        MapDelegate(factory(defaultValueFactoryBlock), storeDefault)
 
 /**
- * creates a [MutableMapDelegate]
+ * creates a [MapDelegate]
  *
- * @param V type of [MutableMapDelegate] value
- * @param defaultValueFactory [Factory] that creates the default value of the created [MutableMapDelegate]
- * @return the created [MutableMapDelegate]
+ * @param V type of [MapDelegate] value
+ * @param defaultValueFactory [Factory] that creates the default value of the created [MapDelegate]
+ * @return the created [MapDelegate]
  */
-fun <V : Any> delegate(defaultValueFactory: Factory<V>? = null): MutableMapDelegate<V> =
-        MutableMapDelegate(defaultValueFactory)
+fun <V : Any> delegate(storeDefault: Boolean = true, defaultValueFactory: Factory<V>? = null): MapDelegate<V> =
+        MapDelegate(defaultValueFactory, storeDefault)
 
 /**
  * used to delegate a property to a [Map] with key type [String]
@@ -32,7 +32,7 @@ fun <V : Any> delegate(defaultValueFactory: Factory<V>? = null): MutableMapDeleg
  * @property storeDefault defines if the default value should be stored in the [Map] if not prepend in [Map]
  * @property key the key in [Map] if null it uses property's name
  */
-class MutableMapDelegate<V : Any> internal constructor(
+class MapDelegate<V : Any>(
         private val defaultValueFactory: Factory<V>? = null,
         private val storeDefault: Boolean = true,
         private val key: String? = null
