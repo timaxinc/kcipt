@@ -8,7 +8,7 @@ import com.github.timaxinc.kcipt.util.io.Resource
  *
  * @property resourcePath
  */
-class ResourceContentSource(private val resourcePath: String) : Source<String> {
+class ResourceSource(private val resourcePath: String) : Source<String> {
 
     /**
      * tris to read content of [Resource] with path [resourcePath]
