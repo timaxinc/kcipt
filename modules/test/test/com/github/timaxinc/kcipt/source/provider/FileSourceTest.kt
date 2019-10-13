@@ -16,7 +16,7 @@ internal class FileSourceTest : AnnotationSpec() {
     }
 
     @Test
-    fun `FUNCTION - read content of file virtual`() {
+    fun `FUNCTION - read content of virtual file`() {
         val path = virtualFileSystem.getPath("unicorn.txt")
         Files.write(path, "unicorn".toByteArray())
 
