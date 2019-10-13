@@ -8,4 +8,3 @@ object StaticLoggerBinder : LoggerFactoryBinder by Slf4JLogBinder {
     @JvmStatic
     fun getSingleton() = this
 }
-
