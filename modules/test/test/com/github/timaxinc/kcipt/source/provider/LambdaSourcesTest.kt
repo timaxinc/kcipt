@@ -1,7 +1,5 @@
-package com.github.timaxinc.kcipt.source
+package com.github.timaxinc.kcipt.source.provider
 
-import com.github.timaxinc.kcipt.source.provider.mutableSource
-import com.github.timaxinc.kcipt.source.provider.source
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.AnnotationSpec
 

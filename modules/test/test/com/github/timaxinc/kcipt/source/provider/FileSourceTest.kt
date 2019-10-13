@@ -1,6 +1,5 @@
-package com.github.timaxinc.kcipt.source
+package com.github.timaxinc.kcipt.source.provider
 
-import com.github.timaxinc.kcipt.source.provider.FileSource
 import com.google.common.jimfs.Configuration
 import com.google.common.jimfs.Jimfs
 import io.kotlintest.shouldBe
