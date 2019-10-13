@@ -2,33 +2,35 @@ package com.github.timaxinc.kcipt.source.provider
 
 import com.github.timaxinc.kcipt.source.MutableSource
 import com.github.timaxinc.kcipt.util.io.setupAsMutableFile
-import java.io.File
+import java.nio.file.FileSystems
+import java.nio.file.Files
+import java.nio.file.Path
 
 /**
- * a [MutableSource] that wraps a given [File]
+ * a [MutableSource] that wraps a given [Path]
  *
- * @property file the wrapped [File]
+ * @property path the wrapped [Path]
  */
-class FileSource(private val file: File) : MutableSource<String> {
+class FileSource(private val path: Path) : MutableSource<String> {
 
-    constructor(path: String) : this(File(path))
+    constructor(path: String) : this(FileSystems.getDefault().getPath(path))
 
     /**
-     * tris to read content of [File] [file]
+     * tris to read content of [path]
      *
-     * @return the content of [File] [file] or a empty [String]
+     * @return the content of [path] or a empty [String]
      */
     override fun read(): String {
-        if (file.setupAsMutableFile()) return file.readText()
+        if (path.setupAsMutableFile()) return String(Files.readAllBytes(path))
         return ""
     }
 
     /**
-     * tris to write [t] in [File] [file]
+     * tris to write [t] in file corresponding to [path]
      *
      * @param t the [String] to write
      */
     override fun write(t: String) {
-        if (file.setupAsMutableFile()) file.writeText(t)
+        if (path.setupAsMutableFile()) Files.write(path, t.toByteArray())
     }
 }
