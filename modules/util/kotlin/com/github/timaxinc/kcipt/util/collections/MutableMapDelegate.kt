@@ -50,8 +50,8 @@ class MutableMapDelegate<V : Any> internal constructor(
         val valueInConfiguration = thisRef[key]
         return run {
             if (valueInConfiguration != null) {
-                try {
-                    @Suppress("UNCHECKED_CAST") valueInConfiguration as V
+                @Suppress("UNCHECKED_CAST") try {
+                    valueInConfiguration as V
                 } catch (classCastException: ClassCastException) {
                     storeAndGetDefault(thisRef, key)
                 }
