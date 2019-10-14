@@ -9,40 +9,40 @@ class DelegateClassloaderTest : AnnotationSpec() {
 
     @Test
     fun `loadClass(String) - delegate has Class`() {
-        val dcl = DelegateClassloader(DummyParent(), DummyDelegate())
-        dcl.loadClass("have") shouldBe DummyDelegateClass::class.java
+        val dcl = DelegateClassloader(DelegateClassloaderTestDummyParent(), DummyDelegate())
+        dcl.loadClass("have") shouldBe DelegateClassloaderTestDummyDelegateClass::class.java
     }
 
     @Test
     fun `loadClass(String) - delegate does not have Class`() {
-        val dcl = DelegateClassloader(DummyParent(), DummyDelegate())
-        dcl.loadClass("doesn't have") shouldBe DummyParentClass::class.java
+        val dcl = DelegateClassloader(DelegateClassloaderTestDummyParent(), DummyDelegate())
+        dcl.loadClass("doesn't have") shouldBe DelegateClassloaderTestDummyParentClass::class.java
     }
 
 
     @Test
     fun `getResource(String) - delegate has resource`() {
-        val dcl = DelegateClassloader(DummyParent(), DummyDelegate())
+        val dcl = DelegateClassloader(DelegateClassloaderTestDummyParent(), DummyDelegate())
         dcl.getResource("have") shouldBe URL("https://delegate.mock")
     }
 
     @Test
     fun `getResource(String) - delegate does not have resource`() {
-        val dcl = DelegateClassloader(DummyParent(), DummyDelegate())
+        val dcl = DelegateClassloader(DelegateClassloaderTestDummyParent(), DummyDelegate())
         dcl.getResource("doesn't have") shouldBe URL("https://parent.mock")
     }
 
 
     @Test
     fun `getResources(String) - delegate has resource`() {
-        val dcl = DelegateClassloader(DummyParent(), DummyDelegate())
+        val dcl = DelegateClassloader(DelegateClassloaderTestDummyParent(), DummyDelegate())
         val resources = dcl.getResources("have")
         resources.nextElement() shouldBe URL("https://delegate.unicorn")
     }
 
     @Test
     fun `getResources(String) - delegate does not have resource`() {
-        val dcl = DelegateClassloader(DummyParent(), DummyDelegate())
+        val dcl = DelegateClassloader(DelegateClassloaderTestDummyParent(), DummyDelegate())
         val resources = dcl.getResources("doesn't have")
         resources.nextElement() shouldBe URL("https://parent.unicorn")
     }
@@ -51,7 +51,7 @@ class DelegateClassloaderTest : AnnotationSpec() {
 internal class DummyDelegate : ClassLoader() {
 
     override fun loadClass(name: String?): Class<*> {
-        if (name == "have") return DummyDelegateClass()::class.java
+        if (name == "have") return DelegateClassloaderTestDummyDelegateClass()::class.java
         else throw ClassNotFoundException(name)
     }
 
@@ -61,22 +61,22 @@ internal class DummyDelegate : ClassLoader() {
     }
 
     override fun getResources(name: String?): Enumeration<URL> {
-        return if (name == "have") DummyDelegateEnumeration()
-        else EmptyEnumeration()
+        return if (name == "have") DelegateClassloaderTestDummyDelegateEnumeration()
+        else DelegateClassloaderTestEmptyEnumeration()
     }
 }
 
-internal class DummyParent : ClassLoader() {
+internal class DelegateClassloaderTestDummyParent : ClassLoader() {
 
-    override fun loadClass(name: String?): Class<*> = DummyParentClass()::class.java
+    override fun loadClass(name: String?): Class<*> = DelegateClassloaderTestDummyParentClass()::class.java
     override fun getResource(name: String?): URL? = URL("https://parent.mock")
-    override fun getResources(name: String?): Enumeration<URL> = DummyParentEnumeration()
+    override fun getResources(name: String?): Enumeration<URL> = DelegateClassloaderTestDummyParentEnumeration()
 }
 
-internal class DummyDelegateClass
-internal class DummyParentClass
+internal class DelegateClassloaderTestDummyDelegateClass
+internal class DelegateClassloaderTestDummyParentClass
 
-internal class EmptyEnumeration : Enumeration<URL> {
+internal class DelegateClassloaderTestEmptyEnumeration : Enumeration<URL> {
 
     override fun hasMoreElements(): Boolean {
         return false
@@ -87,7 +87,7 @@ internal class EmptyEnumeration : Enumeration<URL> {
     }
 }
 
-internal class DummyDelegateEnumeration : Enumeration<URL> {
+internal class DelegateClassloaderTestDummyDelegateEnumeration : Enumeration<URL> {
 
     override fun hasMoreElements(): Boolean {
         return true
@@ -98,7 +98,7 @@ internal class DummyDelegateEnumeration : Enumeration<URL> {
     }
 }
 
-internal class DummyParentEnumeration : Enumeration<URL> {
+internal class DelegateClassloaderTestDummyParentEnumeration : Enumeration<URL> {
 
     override fun hasMoreElements(): Boolean {
         return true
