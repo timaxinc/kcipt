@@ -55,14 +55,14 @@ internal class BlockingClassloaderTest : AnnotationSpec() {
 
 
     @Test
-    fun `FUNCTION getResources(String) Enumeration - No Blacklist`() {
+    fun `FUNCTION getResources(String) Enumeration(URL) - No Blacklist`() {
         val bcl = BlockingClassloader(listOf(), parent = BlockingClassloaderTestDummyLoader())
         val resources = bcl.getResources("dummyValue")
         resources.nextElement() shouldBe URL("https://we.love.unicorns")
     }
 
     @Test
-    fun `FUNCTION getResources(String) Enumeration - Resource on Blacklist`() {
+    fun `FUNCTION getResources(String) Enumeration(URL) - Resource on Blacklist`() {
         val bcl = BlockingClassloader("blockedDummyValue", parent = BlockingClassloaderTestDummyLoader())
         shouldThrow<BlockingClassloader.ResourceBlockedException> {
             bcl.getResources("blockedDummyValue")
@@ -70,7 +70,7 @@ internal class BlockingClassloaderTest : AnnotationSpec() {
     }
 
     @Test
-    fun `FUNCTION getResources(String) Enumeration - Package on Blacklist`() {
+    fun `FUNCTION getResources(String) Enumeration(URL) - Package on Blacklist`() {
         val bcl = BlockingClassloader("blocked.path", parent = BlockingClassloaderTestDummyLoader())
         shouldThrow<BlockingClassloader.PackageBlockedException> {
             bcl.getResources("blocked.path.DummyValue")

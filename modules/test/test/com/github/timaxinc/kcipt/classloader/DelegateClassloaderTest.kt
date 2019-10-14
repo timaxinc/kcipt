@@ -34,14 +34,14 @@ class DelegateClassloaderTest : AnnotationSpec() {
 
 
     @Test
-    fun `FUNCTION getResources(String) Enumeration - delegate has resource`() {
+    fun `FUNCTION getResources(String) Enumeration(URL) - delegate has resource`() {
         val dcl = DelegateClassloader(DelegateClassloaderTestDummyDelegate(), DelegateClassloaderTestDummyParent())
         val resources = dcl.getResources("have")
         resources.nextElement() shouldBe URL("https://delegate.unicorn")
     }
 
     @Test
-    fun `FUNCTION getResources(String) Enumeration - delegate does not have resource`() {
+    fun `FUNCTION getResources(String) Enumeration(URL) - delegate does not have resource`() {
         val dcl = DelegateClassloader(DelegateClassloaderTestDummyDelegate(), DelegateClassloaderTestDummyParent())
         val resources = dcl.getResources("doesn't have")
         resources.nextElement() shouldBe URL("https://parent.unicorn")
