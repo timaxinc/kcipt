@@ -43,7 +43,7 @@ fun <V, T : V> delegate(
  */
 class StringKeyMapDelegate<V, T : V>(
         storeDefault: Boolean = true, defaultValueFactory: Factory<T>? = null
-) : MapDelegateBase<String, V, T>() {
+) : MapDelegateBase<String, V, T>(storeDefault, defaultValueFactory) {
 
     //TODO check doc
     /**
