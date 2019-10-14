@@ -11,14 +11,18 @@ internal class BlockingClassloaderTest : AnnotationSpec() {
     @Test
     fun `loadClass(String) - Blacklist empty`() {
         val bcl = BlockingClassloader(BlockingClassloaderTest::class.java.classLoader)
-        bcl.loadClass(DummyClass::class.java.name) shouldBe DummyClass::class.java
+        bcl.loadClass(DelegateClassloaderTestDummyClass::class.java.name) shouldBe DelegateClassloaderTestDummyClass::class.java
     }
 
     @Test
     fun `loadClass(String) - Blacklist contains name of the requested Class`() {
-        val bcl = BlockingClassloader(BlockingClassloaderTest::class.java.classLoader, DummyClass::class.java.name)
+        val bcl =
+                BlockingClassloader(
+                        BlockingClassloaderTest::class.java.classLoader,
+                        DelegateClassloaderTestDummyClass::class.java.name
+                )
         shouldThrow<BlockingClassloader.ClassBlockedException> {
-            bcl.loadClass(DummyClass::class.java.name)
+            bcl.loadClass(DelegateClassloaderTestDummyClass::class.java.name)
         }
     }
 
@@ -33,13 +37,13 @@ internal class BlockingClassloaderTest : AnnotationSpec() {
 
     @Test
     fun `getResource(String) - No Blacklist`() {
-        val bcl = BlockingClassloader(DummyLoader())
+        val bcl = BlockingClassloader(DelegateClassloaderTestDummyLoader())
         bcl.getResource("dummyValue") shouldBe dummyUrl
     }
 
     @Test
     fun `getResource(String) - Resource on Blacklist`() {
-        val bcl = BlockingClassloader(DummyLoader(), "blockedDummyValue")
+        val bcl = BlockingClassloader(DelegateClassloaderTestDummyLoader(), "blockedDummyValue")
         shouldThrow<BlockingClassloader.ResourceBlockedException> {
             bcl.getResource("blockedDummyValue")
         }
@@ -47,7 +51,7 @@ internal class BlockingClassloaderTest : AnnotationSpec() {
 
     @Test
     fun `getResource(String) - Package on Blacklist`() {
-        val bcl = BlockingClassloader(DummyLoader(), "blocked.path")
+        val bcl = BlockingClassloader(DelegateClassloaderTestDummyLoader(), "blocked.path")
         shouldThrow<BlockingClassloader.PackageBlockedException> {
             bcl.getResource("blocked.path.DummyValue")
         }
@@ -56,14 +60,14 @@ internal class BlockingClassloaderTest : AnnotationSpec() {
 
     @Test
     fun `getResources(String) - No Blacklist`() {
-        val bcl = BlockingClassloader(DummyLoader())
+        val bcl = BlockingClassloader(DelegateClassloaderTestDummyLoader())
         val resources = bcl.getResources("dummyValue")
         resources.nextElement() shouldBe URL("https://we.love.unicorns")
     }
 
     @Test
     fun `getResources(String) - Resource on Blacklist`() {
-        val bcl = BlockingClassloader(DummyLoader(), "blockedDummyValue")
+        val bcl = BlockingClassloader(DelegateClassloaderTestDummyLoader(), "blockedDummyValue")
         shouldThrow<BlockingClassloader.ResourceBlockedException> {
             bcl.getResources("blockedDummyValue")
         }
@@ -71,7 +75,7 @@ internal class BlockingClassloaderTest : AnnotationSpec() {
 
     @Test
     fun `getResources(String) - Package on Blacklist`() {
-        val bcl = BlockingClassloader(DummyLoader(), "blocked.path")
+        val bcl = BlockingClassloader(DelegateClassloaderTestDummyLoader(), "blocked.path")
         shouldThrow<BlockingClassloader.PackageBlockedException> {
             bcl.getResources("blocked.path.DummyValue")
         }
@@ -80,16 +84,16 @@ internal class BlockingClassloaderTest : AnnotationSpec() {
 
 internal val dummyUrl = URL("https://i.am.mocked")
 
-internal class DummyLoader : ClassLoader() {
+internal class DelegateClassloaderTestDummyLoader : ClassLoader() {
 
-    override fun loadClass(name: String?): Class<*> = DummyClass()::class.java
+    override fun loadClass(name: String?): Class<*> = DelegateClassloaderTestDummyClass()::class.java
     override fun getResource(name: String?): URL? = URL("https://i.am.mocked")
-    override fun getResources(name: String?): Enumeration<URL> = DummyEnumeration()
+    override fun getResources(name: String?): Enumeration<URL> = DelegateClassloaderTestDummyEnumeration()
 }
 
-internal class DummyClass
+internal class DelegateClassloaderTestDummyClass
 
-internal class DummyEnumeration : Enumeration<URL> {
+internal class DelegateClassloaderTestDummyEnumeration : Enumeration<URL> {
 
     override fun hasMoreElements(): Boolean {
         return true
