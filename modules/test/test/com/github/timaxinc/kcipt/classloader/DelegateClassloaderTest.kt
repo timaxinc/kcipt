@@ -9,40 +9,40 @@ class DelegateClassloaderTest : AnnotationSpec() {
 
     @Test
     fun `loadClass(String) - delegate has Class`() {
-        val dcl = DelegateClassloader(DummyParent(), DummyDelegate())
+        val dcl = DelegateClassloader(DummyDelegate(), DummyParent())
         dcl.loadClass("have") shouldBe DummyDelegateClass::class.java
     }
 
     @Test
     fun `loadClass(String) - delegate does not have Class`() {
-        val dcl = DelegateClassloader(DummyParent(), DummyDelegate())
+        val dcl = DelegateClassloader(DummyDelegate(), DummyParent())
         dcl.loadClass("doesn't have") shouldBe DummyParentClass::class.java
     }
 
 
     @Test
     fun `getResource(String) - delegate has resource`() {
-        val dcl = DelegateClassloader(DummyParent(), DummyDelegate())
+        val dcl = DelegateClassloader(DummyDelegate(), DummyParent())
         dcl.getResource("have") shouldBe URL("https://delegate.mock")
     }
 
     @Test
     fun `getResource(String) - delegate does not have resource`() {
-        val dcl = DelegateClassloader(DummyParent(), DummyDelegate())
+        val dcl = DelegateClassloader(DummyDelegate(), DummyParent())
         dcl.getResource("doesn't have") shouldBe URL("https://parent.mock")
     }
 
 
     @Test
     fun `getResources(String) - delegate has resource`() {
-        val dcl = DelegateClassloader(DummyParent(), DummyDelegate())
+        val dcl = DelegateClassloader(DummyDelegate(), DummyParent())
         val resources = dcl.getResources("have")
         resources.nextElement() shouldBe URL("https://delegate.unicorn")
     }
 
     @Test
     fun `getResources(String) - delegate does not have resource`() {
-        val dcl = DelegateClassloader(DummyParent(), DummyDelegate())
+        val dcl = DelegateClassloader(DummyDelegate(), DummyParent())
         val resources = dcl.getResources("doesn't have")
         resources.nextElement() shouldBe URL("https://parent.unicorn")
     }
