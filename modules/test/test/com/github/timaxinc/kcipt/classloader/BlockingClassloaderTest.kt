@@ -39,7 +39,7 @@ internal class BlockingClassloaderTest : AnnotationSpec() {
 
     @Test
     fun `getResource(String) - Resource on Blacklist`() {
-        val bcl = BlockingClassloader(listOf(), DummyLoader())
+        val bcl = BlockingClassloader(listOf("blockedDummyValue"), DummyLoader())
         shouldThrow<BlockingClassloader.ResourceBlockedException> {
             bcl.getResource("blockedDummyValue")
         }
