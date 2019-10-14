@@ -4,50 +4,48 @@ import com.github.timaxinc.kcipt.util.factory.Factory
 import com.github.timaxinc.kcipt.util.factory.factory
 import kotlin.reflect.KProperty
 
+//TODO check doc
 /**
- * creates a [MapDelegate]
+ * creates a [StringKeyMapDelegate]
  *
- * @param K type of [MapDelegate] key
- * @param V type of [MapDelegate] value
+ * @param V type of [StringKeyMapDelegate] value
  * @param T type of object that is stored with delegate
- * @param key the key in [Map] if null it tris to use property's name
  * @param storeDefault defines if the default value should be stored in the [Map] if not prepend in [Map]
- * @param defaultValueFactoryBlock lambda that creates the default value of the created [MapDelegate]
- * @return the created [MapDelegate]
+ * @param defaultValueFactoryBlock lambda that creates the default value of the created [StringKeyMapDelegate]
+ * @return the created [StringKeyMapDelegate]
  */
-fun <K, V, T : V> delegate(
-        key: K, storeDefault: Boolean = true, defaultValueFactoryBlock: () -> T
-): MapDelegate<K, V, T> = MapDelegate<K, V, T>(key, storeDefault, factory(defaultValueFactoryBlock))
+fun <V, T : V> delegate(
+        storeDefault: Boolean = true, defaultValueFactoryBlock: () -> T
+): StringKeyMapDelegate<V, T> = StringKeyMapDelegate<V, T>(storeDefault, factory(defaultValueFactoryBlock))
 
+//TODO check doc
 /**
- * creates a [MapDelegate]
+ * creates a [StringKeyMapDelegate]
  *
- * @param K type of [MapDelegate] key
- * @param V type of [MapDelegate] value
+ * @param V type of [StringKeyMapDelegate] value
  * @param T type of object that is stored with delegate
- * @param key the key in [Map] if null it tris to use property's name
  * @param storeDefault defines if the default value should be stored in the [Map] if not prepend in [Map]
  * @param defaultValueFactory [Factory] that creates the default value if it isn't prepend in the [Map]
- * @return the created [MapDelegate]
+ * @return the created [StringKeyMapDelegate]
  */
-fun <K, V, T : V> delegate(
-        key: K, storeDefault: Boolean = true, defaultValueFactory: Factory<T>? = null
-): MapDelegate<K, V, T> = MapDelegate<K, V, T>(key, storeDefault, defaultValueFactory)
+fun <V, T : V> delegate(
+        storeDefault: Boolean = true, defaultValueFactory: Factory<T>? = null
+): StringKeyMapDelegate<V, T> = StringKeyMapDelegate<V, T>(storeDefault, defaultValueFactory)
 
+//TODO check doc
 /**
  * used to delegate a property to a [Map]
  *
- * @param K type of map key
  * @param V type of map value
  * @param T type of object that is stored with delegate
  * @property defaultValueFactory [Factory] that creates the default value if it isn't prepend in the [Map]
  * @property storeDefault defines if the default value should be stored in the [Map] if not prepend in [Map]
- * @property key the key in [Map]
  */
-class MapDelegate<K, V, T : V>(
-        private val key: K, storeDefault: Boolean = true, defaultValueFactory: Factory<T>? = null
-) : MapDelegateBase<K, V, T>(storeDefault, defaultValueFactory) {
+class StringKeyMapDelegate<V, T : V>(
+        storeDefault: Boolean = true, defaultValueFactory: Factory<T>? = null
+) : MapDelegateBase<String, V, T>() {
 
+    //TODO check doc
     /**
      * operator function used to delegate properties
      *
@@ -57,10 +55,12 @@ class MapDelegate<K, V, T : V>(
      * @throws [NoValueFoundException]
      */
     @Suppress("UNCHECKED_CAST")
-    operator fun getValue(thisRef: Map<K, V>, property: KProperty<*>): T {
+    operator fun getValue(thisRef: Map<String, V>, property: KProperty<*>): T {
+        val key = property.name
         return getValueProtected(key, thisRef)
     }
 
+    //TODO check doc
     /**
      * operator function used to delegate properties
      *
@@ -68,7 +68,8 @@ class MapDelegate<K, V, T : V>(
      * @param property the delegated [KProperty]
      * @param value
      */
-    operator fun setValue(thisRef: MutableMap<K, V>, property: KProperty<*>, value: T) {
+    operator fun setValue(thisRef: MutableMap<String, V>, property: KProperty<*>, value: T) {
+        val key = property.name
         setValueProtected(key, thisRef, value)
     }
 }
