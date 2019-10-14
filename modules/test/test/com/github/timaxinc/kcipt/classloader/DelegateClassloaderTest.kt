@@ -8,40 +8,40 @@ import java.util.*
 class DelegateClassloaderTest : AnnotationSpec() {
 
     @Test
-    fun `loadClass(String) - delegate has Class`() {
+    fun `FUNCTION loadClass(String) Class - delegate has Class`() {
         val dcl = DelegateClassloader(DelegateClassloaderTestDummyDelegate(), DelegateClassloaderTestDummyParent())
         dcl.loadClass("have") shouldBe DelegateClassloaderTestDummyDelegateClass::class.java
     }
 
     @Test
-    fun `loadClass(String) - delegate does not have Class`() {
+    fun `FUNCTION loadClass(String) Class - delegate does not have Class`() {
         val dcl = DelegateClassloader(DelegateClassloaderTestDummyDelegate(), DelegateClassloaderTestDummyParent())
         dcl.loadClass("doesn't have") shouldBe DelegateClassloaderTestDummyParentClass::class.java
     }
 
 
     @Test
-    fun `getResource(String) - delegate has resource`() {
+    fun `FUNCTION getResource(String) URL - delegate has resource`() {
         val dcl = DelegateClassloader(DelegateClassloaderTestDummyDelegate(), DelegateClassloaderTestDummyParent())
         dcl.getResource("have") shouldBe URL("https://delegate.mock")
     }
 
     @Test
-    fun `getResource(String) - delegate does not have resource`() {
+    fun `FUNCTION getResource(String) URL - delegate does not have resource`() {
         val dcl = DelegateClassloader(DelegateClassloaderTestDummyDelegate(), DelegateClassloaderTestDummyParent())
         dcl.getResource("doesn't have") shouldBe URL("https://parent.mock")
     }
 
 
     @Test
-    fun `getResources(String) - delegate has resource`() {
+    fun `FUNCTION getResources(String) Enumeration - delegate has resource`() {
         val dcl = DelegateClassloader(DelegateClassloaderTestDummyDelegate(), DelegateClassloaderTestDummyParent())
         val resources = dcl.getResources("have")
         resources.nextElement() shouldBe URL("https://delegate.unicorn")
     }
 
     @Test
-    fun `getResources(String) - delegate does not have resource`() {
+    fun `FUNCTION getResources(String) Enumeration - delegate does not have resource`() {
         val dcl = DelegateClassloader(DelegateClassloaderTestDummyDelegate(), DelegateClassloaderTestDummyParent())
         val resources = dcl.getResources("doesn't have")
         resources.nextElement() shouldBe URL("https://parent.unicorn")
