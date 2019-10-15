@@ -63,7 +63,7 @@ FUNCTION(#10) foo(String?, Int) List(String) - null string
 
 Furthermore all tests should be placed together in a class, if their method is originating from the same class. Integration test, however, should be placed in a separate class with their tested feature as the name.
 
-### Pull Request
+### Pull Requests
 
 When opening a pull request please use the conventional commit scheme for your pull request title. This means a title for a feature should look like this `feat(branch-name): Description` and a title for a bug should look like this `fix(branch-name): Description`. Please note that if there is an issue number present in the name of the branch it should be omitted. 
 
