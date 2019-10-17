@@ -19,9 +19,8 @@ import java.net.URL
  * @param parent
  *          the parent ClassLoader
  */
-class WhitelistClassloader(
-        private val softMode: Boolean, private val whitelist: List<String>, parent: ClassLoader? = null
-) : BlockingClassloader(parent) {
+class WhitelistClassloader(softMode: Boolean, private val whitelist: List<String>, parent: ClassLoader? = null) :
+        BlockingClassloader(softMode, parent) {
 
     /**
      * Creates a BlockingClassloader with the specified parent and a blacklist containing the passed elements.

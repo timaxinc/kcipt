@@ -1,6 +1,6 @@
 package com.github.timaxinc.kcipt.classloader
 
-abstract class BlockingClassloader(parent: ClassLoader?) : ClassLoader(parent) {
+abstract class BlockingClassloader(protected val softMode: Boolean, parent: ClassLoader?) : ClassLoader(parent) {
     /**
      * Abstract representation of an exception thrown, if the blacklist has prevented the requested operation.
      *

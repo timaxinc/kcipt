@@ -22,11 +22,8 @@ import java.util.*
  * @param parent
  *          the parent ClassLoader
  */
-class BlacklistClassloader(
-        private val softMode: Boolean, private val blacklist: List<String>, parent: ClassLoader? = null
-) : BlockingClassloader(
-        parent
-) {
+class BlacklistClassloader(softMode: Boolean, private val blacklist: List<String>, parent: ClassLoader? = null) :
+        BlockingClassloader(softMode, parent) {
 
     /**
      * Creates a BlockingClassloader with the specified parent and a blacklist containing the passed elements.
