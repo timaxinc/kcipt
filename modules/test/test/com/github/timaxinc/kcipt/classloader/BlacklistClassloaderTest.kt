@@ -30,6 +30,24 @@ internal class BlacklistClassloaderTest : AnnotationSpec() {
         }
     }
 
+    @Test
+    fun `FUNCTION loadClass(String) Class - blacklist empty and softMode on`() {
+        val bcl = BlacklistClassloader(true, parent = BlacklistClassloaderTest::class.java.classLoader)
+        bcl.loadClass(BlockingClassloaderTestDummyClass::class.java.name) shouldBe BlockingClassloaderTestDummyClass::class.java
+    }
+
+    @Test
+    fun `FUNCTION loadClass(String) Class - blacklist contains name of the requested class and softMode on`() {
+        val bcl = BlacklistClassloader(true, BlockingClassloaderTestDummyClass::class.java.name)
+        bcl.loadClass(BlockingClassloaderTestDummyClass::class.java.name) shouldBe null
+    }
+
+    @Test
+    fun `FUNCTION loadClass(String) Class - blacklist contains package of the requested class and softMode on`() {
+        val bcl = BlacklistClassloader(true, "java.lang", parent = BlacklistClassloaderTest::class.java.classLoader)
+        bcl.loadClass(String::class.java.name) shouldBe null
+    }
+
 
     @Test
     fun `FUNCTION getResource(String) URL - No Blacklist`() {
