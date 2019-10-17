@@ -6,7 +6,7 @@ import org.slf4j.Marker
 import org.slf4j.helpers.MessageFormatter
 import org.slf4j.spi.LoggerFactoryBinder
 
-object Slf4JLogBinder :  LoggerFactoryBinder {
+object Slf4JLogBinder : LoggerFactoryBinder {
 
     private object LoggerFactory : ILoggerFactory {
         override fun getLogger(name: String?): Logger {
