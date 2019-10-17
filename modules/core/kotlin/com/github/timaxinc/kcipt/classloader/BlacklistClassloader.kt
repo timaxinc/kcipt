@@ -20,7 +20,7 @@ import java.util.*
  *          Instantiates a new BlacklistClassloader.
  *
  * @param parent
- *          the ClassLoader that will be used, if the requested class passes the blacklist check
+ *          the parent ClassLoader
  */
 class BlacklistClassloader(
         private val softMode: Boolean, private val blacklist: List<String>, parent: ClassLoader? = null
@@ -34,7 +34,7 @@ class BlacklistClassloader(
      * @param softMode
      *          If activated, softMode will prevent an Exception to be thrown, if the Class is on the blacklist
      * @param parent
-     *          the ClassLoader that will be used, if the requested class passes the blacklist check
+     *          the parent ClassLoader
      * @param blacklist
      *          the blacklist containing names of Classes, resources, as well as of packages, which may not be used when
      *          loading a class or resource.
