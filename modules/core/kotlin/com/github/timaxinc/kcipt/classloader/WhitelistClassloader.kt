@@ -2,6 +2,7 @@ package com.github.timaxinc.kcipt.classloader
 
 import com.github.timaxinc.kcipt.util.io.Block
 import com.github.timaxinc.kcipt.util.io.startsWithMember
+import java.net.URL
 
 /**
  * WhitelistClassloader is a ClassLoader with a predefined Whitelist of Classes and packages that it will allow to
@@ -63,6 +64,56 @@ class WhitelistClassloader(
             when (name startsWithMember whitelist) {
                 Block.None -> throw ClassBlockedException(name)
                 else       -> super.loadClass(name)
+            }
+        }
+    }
+
+    /**
+     * GetResource gets an url pointing to the specified resource, if the resource is on the whitelist. If not and
+     * softMode is on, null will be returned. If softMode is off, a ResourceBlockedException will be thrown.
+     *
+     * @throws BlockingClassloader.ResourceBlockedException
+     *          if the requested resource is not on the whitelist and softMode is off
+     *
+     * @param name
+     *          the name of the requested resource
+     * @return
+     *          an URL pointing to the resources location. If the resource is not found null will be returned.
+     *          Furthermore null will be returned if the requested resource is not on the whitelist and softMode is on.
+     */
+    override fun getResource(name: String?): URL? {
+        return whitelistedResourceCheckElseGet(name) { super.getResource(name) }
+    }
+
+    /**
+     * WhitelistedResourceCheckElseGet checks if the resource with the specified name is on the whitelist. If it is
+     * the block function will be executed and returned. If not and softMode is on, null will be returned. If
+     * softMode is off, a ResourceBlockedException will be thrown.
+     *
+     * @param T
+     *          the type of the return type
+     * @param name
+     *          the name of the requested resource
+     * @param block
+     *          the function which's return value will be returned if the requested resource is on the whitelist
+     * @return
+     *          the return value of block. If the requested resource is not on the whitelist and softMode is on, null
+     *          will be returned.
+     */
+    private inline fun <T> whitelistedResourceCheckElseGet(name: String?, block: () -> T): T? {
+        if (name == null) {
+            return block()
+        }
+
+        return if (softMode) {
+            when (name startsWithMember whitelist) {
+                is Block.None -> null
+                else          -> block()
+            }
+        } else {
+            when (name startsWithMember whitelist) {
+                is Block.None -> throw ResourceBlockedException(name)
+                else          -> block()
             }
         }
     }
