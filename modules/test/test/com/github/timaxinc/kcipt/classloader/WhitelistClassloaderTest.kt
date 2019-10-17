@@ -71,13 +71,13 @@ internal class WhitelistClassloaderTest : AnnotationSpec() {
     @Test
     fun `FUNCTION getResource(String?) URL? - resource on whitelist and softMode off`() {
         val wlc = WhitelistClassloader(false, "whitelistedResource", parent = WhitelistClassloaderTestDummyLoader())
-        wlc.getResource("whitelistedResource") shouldBe dummyUrl
+        wlc.getResource("whitelistedResource") shouldBe URL("https://i.am.mocked")
     }
 
     @Test
     fun `FUNCTION getResource(String?) URL? - package on whitelist and softMode off`() {
         val wlc = WhitelistClassloader(false, "whitelisted", parent = WhitelistClassloaderTestDummyLoader())
-        wlc.getResource("whitelisted.Resource") shouldBe dummyUrl
+        wlc.getResource("whitelisted.Resource") shouldBe URL("https://i.am.mocked")
     }
 
     @Test
@@ -89,19 +89,60 @@ internal class WhitelistClassloaderTest : AnnotationSpec() {
     @Test
     fun `FUNCTION getResource(String?) URL? - resource on whitelist and softMode on`() {
         val wlc = WhitelistClassloader(true, "whitelistedResource", parent = WhitelistClassloaderTestDummyLoader())
-        wlc.getResource("whitelistedResource") shouldBe dummyUrl
+        wlc.getResource("whitelistedResource") shouldBe URL("https://i.am.mocked")
     }
 
     @Test
     fun `FUNCTION getResource(String?) URL? - package on whitelist and softMode on`() {
         val wlc = WhitelistClassloader(true, "whitelisted", parent = WhitelistClassloaderTestDummyLoader())
-        wlc.getResource("whitelisted.Resource") shouldBe dummyUrl
+        wlc.getResource("whitelisted.Resource") shouldBe URL("https://i.am.mocked")
+    }
+
+
+    @Test
+    fun `FUNCTION getResources(String?) URL? - no whitelist and softMode off`() {
+        val wlc = WhitelistClassloader(false)
+        shouldThrow<BlockingClassloader.ResourceBlockedException> {
+            wlc.getResources("blocked")
+        }
+    }
+
+    @Test
+    fun `FUNCTION getResources(String?) URL? - resource on whitelist and softMode off`() {
+        val wlc = WhitelistClassloader(false, "allowed", parent = WhitelistClassloaderTestDummyLoader())
+        val resources = wlc.getResources("allowed")
+        resources!!.nextElement() shouldBe URL("https://we.love.unicorns")
+    }
+
+    @Test
+    fun `FUNCTION getResources(String?) URL? - package on whitelist and softMode off`() {
+        val wlc = WhitelistClassloader(false, "package", parent = WhitelistClassloaderTestDummyLoader())
+        val resources = wlc.getResources("package.allowed")
+        resources!!.nextElement() shouldBe URL("https://we.love.unicorns")
+    }
+
+    @Test
+    fun `FUNCTION getResources(String?) URL? - no whitelist and softMode on`() {
+        val wlc = WhitelistClassloader(true)
+        wlc.getResources("blocked") shouldBe null
+    }
+
+    @Test
+    fun `FUNCTION getResources(String?) URL? - resource on whitelist and softMode on`() {
+        val wlc = WhitelistClassloader(true, "allowed", parent = WhitelistClassloaderTestDummyLoader())
+        val resources = wlc.getResources("allowed")
+        resources!!.nextElement() shouldBe URL("https://we.love.unicorns")
+    }
+
+    @Test
+    fun `FUNCTION getResources(String?) URL? - package on whitelist and softMode on`() {
+        val wlc = WhitelistClassloader(true, "package", parent = WhitelistClassloaderTestDummyLoader())
+        val resources = wlc.getResources("package.allowed")
+        resources!!.nextElement() shouldBe URL("https://we.love.unicorns")
     }
 }
 
 private class WhitelistClassloaderTestDummyClass
-
-private val dummyUrl = URL("https://i.am.mocked")
 
 private class WhitelistClassloaderTestDummyLoader : ClassLoader() {
 
