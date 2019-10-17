@@ -3,6 +3,7 @@ package com.github.timaxinc.kcipt.classloader
 import com.github.timaxinc.kcipt.util.io.Block
 import com.github.timaxinc.kcipt.util.io.startsWithMember
 import java.net.URL
+import java.util.*
 
 /**
  * WhitelistClassloader is a ClassLoader with a predefined Whitelist of Classes and packages that it will allow to
@@ -88,12 +89,44 @@ class WhitelistClassloader(softMode: Boolean, private val whitelist: List<String
         return if (softMode) {
             when (name startsWithMember whitelist) {
                 is Block.None -> null
-                else          -> getResource(name)
+                else          -> super.getResource(name)
             }
         } else {
             when (name startsWithMember whitelist) {
                 is Block.None -> throw ResourceBlockedException(name)
-                else          -> getResource(name)
+                else          -> super.getResource(name)
+            }
+        }
+    }
+
+    /**
+     * GetResources gets all resources matching the passed name. f the class or its package is present in the blacklist,
+     * loadClass will throw an Exception.
+     *
+     * @param name
+     *          the name of the class whose resources are to be returned
+     * @return
+     *          the resources, null if softMode is on and the resources are blocked
+     *
+     * @throws BlockingClassloader.ResourceBlockedException
+     *          In case the requested class is blocked and softMode is off
+     * @throws BlockingClassloader.PackageBlockedException
+     *          in case the package containing the requested class is blocked and softMode is off
+     */
+    override fun getResources(name: String?): Enumeration<URL>? {
+        if (name == null) {
+            return getResources(name)
+        }
+
+        return if (softMode) {
+            when (name startsWithMember whitelist) {
+                is Block.None -> null
+                else          -> super.getResources(name)
+            }
+        } else {
+            when (name startsWithMember whitelist) {
+                is Block.None -> throw ResourceBlockedException(name)
+                else          -> super.getResources(name)
             }
         }
     }

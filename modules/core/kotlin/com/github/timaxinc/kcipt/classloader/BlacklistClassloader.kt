@@ -94,12 +94,12 @@ class BlacklistClassloader(softMode: Boolean, private val blacklist: List<String
 
         return if (softMode) {
             when (name startsWithMember blacklist) {
-                is Block.None -> getResource(name)
+                is Block.None -> super.getResource(name)
                 else          -> null
             }
         } else {
             when (val it = name startsWithMember blacklist) {
-                is Block.None    -> getResource(name)
+                is Block.None    -> super.getResource(name)
                 is Block.Exact   -> throw ResourceBlockedException(name)
                 is Block.Package -> throw PackageBlockedException(it.packageName)
             }
@@ -127,12 +127,12 @@ class BlacklistClassloader(softMode: Boolean, private val blacklist: List<String
 
         return if (softMode) {
             when (name startsWithMember blacklist) {
-                is Block.None -> getResources(name)
+                is Block.None -> super.getResources(name)
                 else          -> null
             }
         } else {
             when (val it = name startsWithMember blacklist) {
-                is Block.None    -> getResources(name)
+                is Block.None    -> super.getResources(name)
                 is Block.Exact   -> throw ResourceBlockedException(name)
                 is Block.Package -> throw PackageBlockedException(it.packageName)
             }
