@@ -57,7 +57,7 @@ internal class BlacklistClassloaderTest : AnnotationSpec() {
 
     @Test
     fun `FUNCTION getResource(String?) URL? - Resource on Blacklist and softMode off`() {
-        val bcl = BlacklistClassloader(false, listOf("blockedDummyValue"), BlockingClassloaderTestDummyLoader())
+        val bcl = BlacklistClassloader(false, listOf("blockedDummyValue"))
         shouldThrow<BlockingClassloader.ResourceBlockedException> {
             bcl.getResource("blockedDummyValue")
         }
@@ -65,7 +65,7 @@ internal class BlacklistClassloaderTest : AnnotationSpec() {
 
     @Test
     fun `FUNCTION getResource(String?) URL? - Package on Blacklist and softMode off`() {
-        val bcl = BlacklistClassloader(false, "blocked.path", parent = BlockingClassloaderTestDummyLoader())
+        val bcl = BlacklistClassloader(false, "blocked.path")
         shouldThrow<BlockingClassloader.PackageBlockedException> {
             bcl.getResource("blocked.path.DummyValue")
         }
