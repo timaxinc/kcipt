@@ -1,5 +1,7 @@
 package com.github.timaxinc.kcipt.classloader
 
+import com.github.timaxinc.kcipt.util.io.Block
+import com.github.timaxinc.kcipt.util.io.startsWithMember
 import java.net.URL
 import java.util.*
 
@@ -110,31 +112,5 @@ class BlacklistClassloader(private val blacklist: List<String>, parent: ClassLoa
             is Block.Exact   -> throw ResourceBlockedException(name)
             is Block.Package -> throw PackageBlockedException(it.packageName)
         }
-    }
-
-    /**
-     * Checks uf there if the passed element starts with any of the members of the MutableList.
-     *
-     * @param list
-     *          the List with the String which shall be used for the check
-     *
-     * @return
-     *          {@code true} if the String starts with at least one of the members of the members of the List; {@code
-     *          false} otherwise
-     */
-    private infix fun String.startsWithMember(list: List<String>): Block {
-        list.forEach {
-            if (this.startsWith(it)) {
-                if (this == it) return Block.Exact
-                return Block.Package(it)
-            }
-        }
-        return Block.None
-    }
-
-    private sealed class Block {
-        object None : Block()
-        object Exact : Block()
-        class Package(val packageName: String) : Block()
     }
 }
