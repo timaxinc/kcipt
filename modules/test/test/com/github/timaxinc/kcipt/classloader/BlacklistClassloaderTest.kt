@@ -91,14 +91,14 @@ internal class BlacklistClassloaderTest : AnnotationSpec() {
 
 
     @Test
-    fun `FUNCTION getResources(String) Enumeration(URL) - No Blacklist`() {
+    fun `FUNCTION getResources(String) Enumeration(URL) - No Blacklist and softMode off`() {
         val bcl = BlacklistClassloader(false, parent = BlockingClassloaderTestDummyLoader())
         val resources = bcl.getResources("dummyValue")
         resources!!.nextElement() shouldBe URL("https://we.love.unicorns")
     }
 
     @Test
-    fun `FUNCTION getResources(String) Enumeration(URL) - Resource on Blacklist`() {
+    fun `FUNCTION getResources(String) Enumeration(URL) - Resource on Blacklist and softMode off`() {
         val bcl = BlacklistClassloader(false, "blockedDummyValue", parent = BlockingClassloaderTestDummyLoader())
         shouldThrow<BlockingClassloader.ResourceBlockedException> {
             bcl.getResources("blockedDummyValue")
@@ -106,11 +106,30 @@ internal class BlacklistClassloaderTest : AnnotationSpec() {
     }
 
     @Test
-    fun `FUNCTION getResources(String) Enumeration(URL) - Package on Blacklist`() {
+    fun `FUNCTION getResources(String) Enumeration(URL) - Package on Blacklist and softMode off`() {
         val bcl = BlacklistClassloader(false, "blocked.path", parent = BlockingClassloaderTestDummyLoader())
         shouldThrow<BlockingClassloader.PackageBlockedException> {
             bcl.getResources("blocked.path.DummyValue")
         }
+    }
+
+    @Test
+    fun `FUNCTION getResources(String) Enumeration(URL) - No Blacklist and softMode on`() {
+        val bcl = BlacklistClassloader(true, parent = BlockingClassloaderTestDummyLoader())
+        val resources = bcl.getResources("dummyValue")
+        resources!!.nextElement() shouldBe URL("https://we.love.unicorns")
+    }
+
+    @Test
+    fun `FUNCTION getResources(String) Enumeration(URL) - Resource on Blacklist and softMode on`() {
+        val bcl = BlacklistClassloader(true, "blockedDummyValue", parent = BlockingClassloaderTestDummyLoader())
+        bcl.getResources("blockedDummyValue") shouldBe null
+    }
+
+    @Test
+    fun `FUNCTION getResources(String) Enumeration(URL) - Package on Blacklist and softMode on`() {
+        val bcl = BlacklistClassloader(true, "blocked.path", parent = BlockingClassloaderTestDummyLoader())
+        bcl.getResources("blocked.path.DummyValue") shouldBe null
     }
 }
 
