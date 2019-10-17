@@ -6,6 +6,6 @@ internal class StringKeyMapDelegateTest : AnnotationSpec() {
 
     @Test
     fun `TEST - get value from map`() {
-        TODO()
+        //TODO
     }
 }
