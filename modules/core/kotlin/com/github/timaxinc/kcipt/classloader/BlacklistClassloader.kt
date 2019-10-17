@@ -10,26 +10,34 @@ import java.util.*
  * All classes, resources and packages contained in that List may not be used when attempting to load a Class or
  * Resource.
  *
+ * @param softMode
+ *          If activated, softMode will prevent an Exception to be thrown, if the Class is on the blacklist
  * @param parent
  *          the ClassLoader that will be used, if the requested class passes the blacklist check
  * @property blacklist
  *          the blacklist containing names of Classes, resources, as well as of packages, which may not be used when
  *          loading a class or resource.
  */
-class BlacklistClassloader(private val blacklist: List<String>, parent: ClassLoader? = null) : BlockingClassloader(
+class BlacklistClassloader(
+        private val softMode: Boolean, private val blacklist: List<String>, parent: ClassLoader? = null
+) : BlockingClassloader(
         parent
 ) {
 
     /**
      * Creates a BlockingClassloader with the specified parent and a blacklist containing the passed elements.
      *
+     * @param softMode
+     *          If activated, softMode will prevent an Exception to be thrown, if the Class is on the blacklist
      * @param parent
      *          the ClassLoader that will be used, if the requested class passes the blacklist check
      * @param blacklist
      *          the blacklist containing names of Classes, resources, as well as of packages, which may not be used when
      *          loading a class or resource.
      */
-    constructor(vararg blacklist: String, parent: ClassLoader? = null) : this(blacklist.toList(), parent)
+    constructor(softMode: Boolean, vararg blacklist: String, parent: ClassLoader? = null) : this(
+            softMode, blacklist.toList(), parent
+    )
 
     /**
      * LoadClass loads the class with the specified name. If the class or its package is present in the blacklist,
@@ -38,22 +46,29 @@ class BlacklistClassloader(private val blacklist: List<String>, parent: ClassLoa
      * @param name
      *          the name of the class to be loaded
      * @return
-     *          the loaded class
+     *          the loaded class, null if softMode is on and the Class is blocked
      *
      * @throws BlockingClassloader.ClassBlockedException
-     *          In case the requested class is blocked.
+     *          In case the requested class is blocked and softMode is off
      * @throws BlockingClassloader.PackageBlockedException
-     *          in case the package containing the requested class is blocked.
+     *          in case the package containing the requested class is blocked and softMode is off
      */
-    override fun loadClass(name: String?): Class<*> {
+    override fun loadClass(name: String?): Class<*>? {
         if (name == null) {
             return super.loadClass(name)
         }
 
-        when (val it = name startsWithMember blacklist) {
-            is Block.None    -> return super.loadClass(name)
-            is Block.Exact   -> throw ClassBlockedException(name)
-            is Block.Package -> throw PackageBlockedException(it.packageName)
+        return if (softMode) {
+            when (name startsWithMember blacklist) {
+                is Block.None -> super.loadClass(name)
+                else          -> null
+            }
+        } else {
+            when (val it = name startsWithMember blacklist) {
+                is Block.None    -> super.loadClass(name)
+                is Block.Exact   -> throw ClassBlockedException(name)
+                is Block.Package -> throw PackageBlockedException(it.packageName)
+            }
         }
     }
 
@@ -64,7 +79,7 @@ class BlacklistClassloader(private val blacklist: List<String>, parent: ClassLoa
      * @param name
      *          the name of the class whose resource is to be returned
      * @return
-     *          the resource
+     *          the resource, null if softMode is on and the resource is blocked
      *
      * @throws BlockingClassloader.ResourceBlockedException
      *          In case the requested class is blocked.
@@ -72,8 +87,7 @@ class BlacklistClassloader(private val blacklist: List<String>, parent: ClassLoa
      *          in case the package containing the requested class is blocked.
      */
     override fun getResource(name: String?): URL? {
-        blockResourceCheck(name)
-        return super.getResource(name)
+        return blockedResourceCheckElseGet(name) { super.getResource(name) }
     }
 
     /**
@@ -83,34 +97,41 @@ class BlacklistClassloader(private val blacklist: List<String>, parent: ClassLoa
      * @param name
      *          the name of the class whose resources are to be returned
      * @return
-     *          the resources
+     *          the resources, null if softMode is on and the resources are blocked
      *
      * @throws BlockingClassloader.ResourceBlockedException
-     *          In case the requested class is blocked.
+     *          In case the requested class is blocked and softMode is off
      * @throws BlockingClassloader.PackageBlockedException
-     *          in case the package containing the requested class is blocked.
+     *          in case the package containing the requested class is blocked and softMode is off
      */
-    override fun getResources(name: String?): Enumeration<URL> {
-        blockResourceCheck(name)
-        return super.getResources(name)
+    override fun getResources(name: String?): Enumeration<URL>? {
+        return blockedResourceCheckElseGet(name) { super.getResources(name) }
     }
 
     /**
-     * Checks if the name of the resource is on the blacklist of resources and packages. If that is the case, the
-     * corresponding exception will be thrown.
+     * Checks if the name of the resource is on the blacklist of resources and packages. If that is the case and
+     * softMode is turned on, null will be returned. If softMode is off the respective Exception will be thrown. If
+     * the requested resource passed the checks, the return value of the passed lambda will be returned.
      *
      * @param name
      *          the name of the class
      */
-    private fun blockResourceCheck(name: String?) {
+    private inline fun <T> blockedResourceCheckElseGet(name: String?, block: () -> T): T? {
         if (name == null) {
-            return
+            return block()
         }
 
-        when (val it = name startsWithMember blacklist) {
-            is Block.None    -> return
-            is Block.Exact   -> throw ResourceBlockedException(name)
-            is Block.Package -> throw PackageBlockedException(it.packageName)
+        return if (softMode) {
+            when (name startsWithMember blacklist) {
+                is Block.None -> block()
+                else          -> null
+            }
+        } else {
+            when (val it = name startsWithMember blacklist) {
+                is Block.None    -> block()
+                is Block.Exact   -> throw ResourceBlockedException(name)
+                is Block.Package -> throw PackageBlockedException(it.packageName)
+            }
         }
     }
 }
