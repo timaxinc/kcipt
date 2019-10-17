@@ -91,7 +91,22 @@ class BlacklistClassloader(
      *          in case the package containing the requested class is blocked.
      */
     override fun getResource(name: String?): URL? {
-        return blockedResourceCheckElseGet(name) { super.getResource(name) }
+        if (name == null) {
+            return getResource(name)
+        }
+
+        return if (softMode) {
+            when (name startsWithMember blacklist) {
+                is Block.None -> getResource(name)
+                else          -> null
+            }
+        } else {
+            when (val it = name startsWithMember blacklist) {
+                is Block.None    -> getResource(name)
+                is Block.Exact   -> throw ResourceBlockedException(name)
+                is Block.Package -> throw PackageBlockedException(it.packageName)
+            }
+        }
     }
 
     /**
@@ -109,30 +124,18 @@ class BlacklistClassloader(
      *          in case the package containing the requested class is blocked and softMode is off
      */
     override fun getResources(name: String?): Enumeration<URL>? {
-        return blockedResourceCheckElseGet(name) { super.getResources(name) }
-    }
-
-    /**
-     * Checks if the name of the resource is on the blacklist of resources and packages. If that is the case and
-     * softMode is turned on, null will be returned. If softMode is off the respective Exception will be thrown. If
-     * the requested resource passed the checks, the return value of the passed lambda will be returned.
-     *
-     * @param name
-     *          the name of the class
-     */
-    private inline fun <T> blockedResourceCheckElseGet(name: String?, block: () -> T): T? {
         if (name == null) {
-            return block()
+            return getResources(name)
         }
 
         return if (softMode) {
             when (name startsWithMember blacklist) {
-                is Block.None -> block()
+                is Block.None -> getResources(name)
                 else          -> null
             }
         } else {
             when (val it = name startsWithMember blacklist) {
-                is Block.None    -> block()
+                is Block.None    -> getResources(name)
                 is Block.Exact   -> throw ResourceBlockedException(name)
                 is Block.Package -> throw PackageBlockedException(it.packageName)
             }
