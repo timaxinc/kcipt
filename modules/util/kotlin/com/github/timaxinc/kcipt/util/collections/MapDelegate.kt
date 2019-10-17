@@ -54,7 +54,7 @@ class MapDelegate<K, V, T : V>(
      * @param thisRef the [Map] to store in
      * @param property the delegated [KProperty]
      * @return the value stored in [Map] or a new default value created by [defaultValueFactory]
-     * @throws [NoValueFoundException]
+     * @throws [MapDelegateBase.NoValueFoundException]
      */
     @Suppress("UNCHECKED_CAST")
     operator fun getValue(thisRef: Map<K, V>, property: KProperty<*>): T {

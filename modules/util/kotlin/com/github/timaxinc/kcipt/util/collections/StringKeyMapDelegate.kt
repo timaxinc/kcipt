@@ -4,7 +4,6 @@ import com.github.timaxinc.kcipt.util.factory.Factory
 import com.github.timaxinc.kcipt.util.factory.factory
 import kotlin.reflect.KProperty
 
-//TODO check doc
 /**
  * creates a [StringKeyMapDelegate]
  *
@@ -18,7 +17,6 @@ fun <V, T : V> delegate(
         storeDefault: Boolean = true, defaultValueFactoryBlock: () -> T
 ): StringKeyMapDelegate<V, T> = StringKeyMapDelegate<V, T>(storeDefault, factory(defaultValueFactoryBlock))
 
-//TODO check doc
 /**
  * creates a [StringKeyMapDelegate]
  *
@@ -32,9 +30,8 @@ fun <V, T : V> delegate(
         storeDefault: Boolean = true, defaultValueFactory: Factory<T>? = null
 ): StringKeyMapDelegate<V, T> = StringKeyMapDelegate<V, T>(storeDefault, defaultValueFactory)
 
-//TODO check doc
 /**
- * used to delegate a property to a [Map]
+ * used to delegate a property to a [Map] with key type [String]
  *
  * @param V type of map value
  * @param T type of object that is stored with delegate
@@ -45,14 +42,13 @@ class StringKeyMapDelegate<V, T : V>(
         storeDefault: Boolean = true, defaultValueFactory: Factory<T>? = null
 ) : MapDelegateBase<String, V, T>(storeDefault, defaultValueFactory) {
 
-    //TODO check doc
     /**
      * operator function used to delegate properties
      *
      * @param thisRef the [Map] to store in
      * @param property the delegated [KProperty]
      * @return the value stored in [Map] or a new default value created by [defaultValueFactory]
-     * @throws [NoValueFoundException]
+     * @throws [MapDelegateBase.NoValueFoundException]
      */
     @Suppress("UNCHECKED_CAST")
     operator fun getValue(thisRef: Map<String, V>, property: KProperty<*>): T {
@@ -60,7 +56,6 @@ class StringKeyMapDelegate<V, T : V>(
         return getValueProtected(key, thisRef)
     }
 
-    //TODO check doc
     /**
      * operator function used to delegate properties
      *
