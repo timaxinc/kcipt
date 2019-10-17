@@ -1,1 +1,2 @@
+//TODO doc
 interface ScriptContext

@@ -1,0 +1,29 @@
+package com.github.timaxinc.kcipt.source.provider
+
+import io.kotlintest.shouldBe
+import io.kotlintest.specs.AnnotationSpec
+
+internal class LambdaSourcesTest : AnnotationSpec() {
+
+    @Test
+    fun `TEST - read from source`() {
+        val value = "unicorn"
+        val source = source {
+            value
+        }
+        source.read() shouldBe value
+    }
+
+    @Test
+    fun `TEST - read and write from and to source`() {
+        var value = "unicorn"
+        val source = mutableSource(readBlock = {
+            value
+        }, writeBlock = {
+            value = this
+        })
+        source.read() shouldBe value
+        source.write("hello galaxy")
+        value shouldBe "hello galaxy"
+    }
+}
