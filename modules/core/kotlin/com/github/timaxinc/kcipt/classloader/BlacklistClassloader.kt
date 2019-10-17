@@ -38,9 +38,9 @@ class BlacklistClassloader(private val blacklist: List<String>, parent: ClassLoa
      * @return
      *          the loaded class
      *
-     * @throws ClassBlockedException
+     * @throws BlockingClassloader.ClassBlockedException
      *          In case the requested class is blocked.
-     * @throws PackageBlockedException
+     * @throws BlockingClassloader.PackageBlockedException
      *          in case the package containing the requested class is blocked.
      */
     override fun loadClass(name: String?): Class<*> {
@@ -64,9 +64,9 @@ class BlacklistClassloader(private val blacklist: List<String>, parent: ClassLoa
      * @return
      *          the resource
      *
-     * @throws ClassBlockedException
+     * @throws BlockingClassloader.ResourceBlockedException
      *          In case the requested class is blocked.
-     * @throws PackageBlockedException
+     * @throws BlockingClassloader.PackageBlockedException
      *          in case the package containing the requested class is blocked.
      */
     override fun getResource(name: String?): URL? {
@@ -83,9 +83,9 @@ class BlacklistClassloader(private val blacklist: List<String>, parent: ClassLoa
      * @return
      *          the resources
      *
-     * @throws ClassBlockedException
+     * @throws BlockingClassloader.ResourceBlockedException
      *          In case the requested class is blocked.
-     * @throws PackageBlockedException
+     * @throws BlockingClassloader.PackageBlockedException
      *          in case the package containing the requested class is blocked.
      */
     override fun getResources(name: String?): Enumeration<URL> {
