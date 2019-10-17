@@ -10,13 +10,17 @@ import java.util.*
  * All classes, resources and packages contained in that List may not be used when attempting to load a Class or
  * Resource.
  *
- * @param softMode
+ * @property softMode
  *          If activated, softMode will prevent an Exception to be thrown, if the Class is on the blacklist
- * @param parent
- *          the ClassLoader that will be used, if the requested class passes the blacklist check
  * @property blacklist
  *          the blacklist containing names of Classes, resources, as well as of packages, which may not be used when
  *          loading a class or resource.
+ *
+ * @constructor
+ *          Instantiates a new BlacklistClassloader.
+ *
+ * @param parent
+ *          the ClassLoader that will be used, if the requested class passes the blacklist check
  */
 class BlacklistClassloader(
         private val softMode: Boolean, private val blacklist: List<String>, parent: ClassLoader? = null
