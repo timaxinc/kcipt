@@ -50,13 +50,13 @@ internal class BlacklistClassloaderTest : AnnotationSpec() {
 
 
     @Test
-    fun `FUNCTION getResource(String) URL - No Blacklist`() {
+    fun `FUNCTION getResource(String) URL - No Blacklist and softMode off`() {
         val bcl = BlacklistClassloader(false, parent = BlockingClassloaderTestDummyLoader())
         bcl.getResource("dummyValue") shouldBe dummyUrl
     }
 
     @Test
-    fun `FUNCTION getResource(String) URL - Resource on Blacklist`() {
+    fun `FUNCTION getResource(String) URL - Resource on Blacklist and softMode off`() {
         val bcl = BlacklistClassloader(false, listOf("blockedDummyValue"), BlockingClassloaderTestDummyLoader())
         shouldThrow<BlockingClassloader.ResourceBlockedException> {
             bcl.getResource("blockedDummyValue")
@@ -64,11 +64,29 @@ internal class BlacklistClassloaderTest : AnnotationSpec() {
     }
 
     @Test
-    fun `FUNCTION getResource(String) URL - Package on Blacklist`() {
+    fun `FUNCTION getResource(String) URL - Package on Blacklist and softMode off`() {
         val bcl = BlacklistClassloader(false, "blocked.path", parent = BlockingClassloaderTestDummyLoader())
         shouldThrow<BlockingClassloader.PackageBlockedException> {
             bcl.getResource("blocked.path.DummyValue")
         }
+    }
+
+    @Test
+    fun `FUNCTION getResource(String) URL - No Blacklist and softMode on`() {
+        val bcl = BlacklistClassloader(true, parent = BlockingClassloaderTestDummyLoader())
+        bcl.getResource("dummyValue") shouldBe dummyUrl
+    }
+
+    @Test
+    fun `FUNCTION getResource(String) URL - Resource on Blacklist and softMode on`() {
+        val bcl = BlacklistClassloader(true, listOf("blockedDummyValue"), BlockingClassloaderTestDummyLoader())
+        bcl.getResource("blockedDummyValue") shouldBe null
+    }
+
+    @Test
+    fun `FUNCTION getResource(String) URL - Package on Blacklist and softMode on`() {
+        val bcl = BlacklistClassloader(true, "blocked.path", parent = BlockingClassloaderTestDummyLoader())
+        bcl.getResource("blocked.path.DummyValue") shouldBe null
     }
 
 
