@@ -3,6 +3,7 @@ package com.github.timaxinc.kcipt.classloader
 import com.github.timaxinc.kcipt.util.io.Block
 import com.github.timaxinc.kcipt.util.io.startsWithMember
 import java.net.URL
+import java.util.*
 
 /**
  * WhitelistClassloader is a ClassLoader with a predefined Whitelist of Classes and packages that it will allow to
@@ -83,6 +84,24 @@ class WhitelistClassloader(
      */
     override fun getResource(name: String?): URL? {
         return whitelistedResourceCheckElseGet(name) { super.getResource(name) }
+    }
+
+    /**
+     * GetResources gets all resources associated with the passed name. If no resource is found null is returned.
+     * Additionally if the resource is not on the whitelist and softMode is on, null will be returned. If softMode is
+     * off a ResourceBlockedException will be thrown.
+     *
+     * @throws BlockingClassloader.ResourceBlockedException
+     *              if the requested resource is not on the whitelist and softMode is off
+     *
+     * @param name
+     *          the name of the requested resource
+     * @return
+     *          an Enumeration of URLs pointing to the locations of the resources. If the requested resources is not
+     *          on the whitelist and softMode is on, null will be returned.
+     */
+    override fun getResources(name: String?): Enumeration<URL>? {
+        return whitelistedResourceCheckElseGet(name) { super.getResources(name) }
     }
 
     /**
