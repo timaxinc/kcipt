@@ -14,7 +14,7 @@ import java.util.*
  *          the blacklist containing names of Classes, resources, as well as of packages, which may not be used when
  *          loading a class or resource.
  */
-class BlockingClassloader(private val blacklist: List<String>, parent: ClassLoader? = null) : ClassLoader(parent) {
+class BlacklistClassloader(private val blacklist: List<String>, parent: ClassLoader? = null) : ClassLoader(parent) {
 
     /**
      * Creates a BlockingClassloader with the specified parent and a blacklist containing the passed elements.
