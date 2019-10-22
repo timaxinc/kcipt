@@ -37,7 +37,7 @@ class WhitelistClassloader(softMode: Boolean, private val whitelist: List<String
         return if (name == null) {
             Block.None
         } else {
-            when (val it = name startsWithMember whitelist) {
+            when (name startsWithMember whitelist) {
                 StartsWith.None -> Block.Single(name)
                 else            -> Block.None
             }
