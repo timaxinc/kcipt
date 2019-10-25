@@ -3,115 +3,113 @@ package com.github.timaxinc.kcipt.classloader
 import java.net.URL
 import java.util.*
 
-/**
- * BlockingClassLoader is a ClassLoader holding blacklist of packages and classes, as well as a parent ClassLoader.
- * All classes, resources and packages contained in that List may not be used when attempting to load a Class or
- * Resource.
- *
- * @param parent
- *          the ClassLoader that will be used, if the requested class passes the blacklist check
- * @property blacklist
- *          the blacklist containing names of Classes, resources, as well as of packages, which may not be used when
- *          loading a class or resource.
- */
-class BlockingClassloader(private val blacklist: List<String>, parent: ClassLoader? = null) : ClassLoader(parent) {
+abstract class BlockingClassloader(protected val softMode: Boolean, parent: ClassLoader?) : ClassLoader(parent) {
+
+    protected sealed class Block {
+        object None : Block()
+        class Single(val name: String) : Block()
+        class Package(val name: String) : Block()
+    }
 
     /**
-     * Creates a BlockingClassloader with the specified parent and a blacklist containing the passed elements.
+     * Checks if a Class/resource, a package or nothing should be blocked.
      *
-     * @param parent
-     *          the ClassLoader that will be used, if the requested class passes the blacklist check
-     * @param blacklist
-     *          the blacklist containing names of Classes, resources, as well as of packages, which may not be used when
-     *          loading a class or resource.
+     * @param name
+     *          the name of the resource/Class to check
+     * @return
+     *          the Block type defining what is blocked
      */
-    constructor(vararg blacklist: String, parent: ClassLoader? = null) : this(blacklist.toList(), parent)
+    protected abstract fun blockCheck(name: String?): Block
 
     /**
-     * LoadClass loads the class with the specified name. If the class or its package is present in the blacklist,
-     * loadClass will throw an Exception
+     * LoadClass loads the class with the specified name. Depending on what blockCheck returns and if softMode is
+     * enabled, it will take the necessary actions.
      *
      * @param name
      *          the name of the class to be loaded
      * @return
-     *          the loaded class
+     *          the loaded class, null if softMode is on and the Class is blocked
      *
-     * @throws ClassBlockedException
-     *          In case the requested class is blocked.
-     * @throws PackageBlockedException
-     *          in case the package containing the requested class is blocked.
+     * @throws BlockingClassloader.ClassBlockedException
+     *          if blockCheck returns Block.Single and softMode is off
+     * @throws BlockingClassloader.PackageBlockedException
+     *          if blockCheck returns Block.Package and softMode is off
      */
-    override fun loadClass(name: String?): Class<*> {
-        if (name == null) {
-            return super.loadClass(name)
-        }
-
-        when (val it = name startsWithMember blacklist) {
-            is Block.None    -> return super.loadClass(name)
-            is Block.Exact   -> throw ClassBlockedException(name)
-            is Block.Package -> throw PackageBlockedException(it.packageName)
+    override fun loadClass(name: String?): Class<*>? {
+        return if (softMode) {
+            when (blockCheck(name)) {
+                is Block.None -> super.loadClass(name)
+                else          -> null
+            }
+        } else {
+            when (val it = blockCheck(name)) {
+                is Block.None    -> super.loadClass(name)
+                is Block.Single  -> throw ClassBlockedException(it.name)
+                is Block.Package -> throw PackageBlockedException(it.name)
+            }
         }
     }
 
     /**
-     * GetResource will get the first resource matched by the passed name. If the class or its package is present in the
-     * blacklist, loadClass will throw an Exception.
+     * GetResource will get the first resource matched by the passed name. Depending on what blockCheck returns and if softMode is
+     * enabled, it will take the necessary actions.
      *
      * @param name
      *          the name of the class whose resource is to be returned
      * @return
-     *          the resource
+     *          the resource, null if softMode is on and the resource is blocked
      *
-     * @throws ClassBlockedException
-     *          In case the requested class is blocked.
-     * @throws PackageBlockedException
-     *          in case the package containing the requested class is blocked.
+     * @throws BlockingClassloader.ResourceBlockedException
+     *          if blockCheck returns Block.Single and softMode is off
+     * @throws BlockingClassloader.PackageBlockedException
+     *          if blockCheck returns Block.Package and softMode is off
      */
     override fun getResource(name: String?): URL? {
-        blockResourceCheck(name)
-        return super.getResource(name)
+        return if (softMode) {
+            when (blockCheck(name)) {
+                is Block.None -> super.getResource(name)
+                else          -> null
+            }
+        } else {
+            when (val it = blockCheck(name)) {
+                is Block.None    -> super.getResource(name)
+                is Block.Single  -> throw ResourceBlockedException(it.name)
+                is Block.Package -> throw PackageBlockedException(it.name)
+            }
+        }
     }
 
     /**
-     * GetResources gets all resources matching the passed name. f the class or its package is present in the blacklist,
-     * loadClass will throw an Exception.
+     * GetResources gets all resources matching the passed name. Depending on what blockCheck returns and if softMode is
+     * enabled, it will take the necessary actions.
      *
      * @param name
      *          the name of the class whose resources are to be returned
      * @return
-     *          the resources
+     *          the resources, null if softMode is on and the resources are blocked
      *
-     * @throws ClassBlockedException
-     *          In case the requested class is blocked.
-     * @throws PackageBlockedException
-     *          in case the package containing the requested class is blocked.
+     * @throws BlockingClassloader.ResourceBlockedException
+     *          if blockCheck returns Block.Single and softMode is off
+     * @throws BlockingClassloader.PackageBlockedException
+     *          if blockCheck returns Block.Package and softMode is off
      */
-    override fun getResources(name: String?): Enumeration<URL> {
-        blockResourceCheck(name)
-        return super.getResources(name)
-    }
-
-    /**
-     * Checks if the name of the resource is on the blacklist of resources and packages. If that is the case, the
-     * corresponding exception will be thrown.
-     *
-     * @param name
-     *          the name of the class
-     */
-    private fun blockResourceCheck(name: String?) {
-        if (name == null) {
-            return
-        }
-
-        when (val it = name startsWithMember blacklist) {
-            is Block.None    -> return
-            is Block.Exact   -> throw ResourceBlockedException(name)
-            is Block.Package -> throw PackageBlockedException(it.packageName)
+    override fun getResources(name: String?): Enumeration<URL>? {
+        return if (softMode) {
+            when (blockCheck(name)) {
+                is Block.None -> super.getResources(name)
+                else          -> null
+            }
+        } else {
+            when (val it = blockCheck(name)) {
+                is Block.None    -> super.getResources(name)
+                is Block.Single  -> throw ResourceBlockedException(it.name)
+                is Block.Package -> throw PackageBlockedException(it.name)
+            }
         }
     }
 
     /**
-     * Checks uf there if the passed element starts with any of the members of the MutableList.
+     * Checks if there if the passed element starts with any of the members of the MutableList.
      *
      * @param list
      *          the List with the String which shall be used for the check
@@ -120,20 +118,20 @@ class BlockingClassloader(private val blacklist: List<String>, parent: ClassLoad
      *          {@code true} if the String starts with at least one of the members of the members of the List; {@code
      *          false} otherwise
      */
-    private infix fun String.startsWithMember(list: List<String>): Block {
+    protected infix fun String.startsWithMember(list: List<String>): StartsWith {
         list.forEach {
             if (this.startsWith(it)) {
-                if (this == it) return Block.Exact
-                return Block.Package(it)
+                if (this == it) return StartsWith.Exact
+                return StartsWith.Package(it)
             }
         }
-        return Block.None
+        return StartsWith.None
     }
 
-    private sealed class Block {
-        object None : Block()
-        object Exact : Block()
-        class Package(val packageName: String) : Block()
+    protected sealed class StartsWith {
+        object None : StartsWith()
+        object Exact : StartsWith()
+        class Package(val packageName: String) : StartsWith()
     }
 
     /**
