@@ -10,8 +10,7 @@ import com.github.timaxinc.kcipt.result.createFailure
 import com.github.timaxinc.kcipt.result.createSuccess
 import kotlin.script.experimental.api.*
 import kotlin.script.experimental.host.toScriptSource
-import kotlin.script.experimental.jvm.JvmDependencyFromClassLoader
-import kotlin.script.experimental.jvm.defaultJvmScriptingHostConfiguration
+import kotlin.script.experimental.jvm.*
 import kotlin.script.experimental.jvmhost.JvmScriptCompiler
 
 /**
@@ -33,15 +32,18 @@ class KotlinJvmScriptCompiler(
     override suspend fun invoke(script: Script): Result<CompiledScript, CompilerReport> {
         val baseConfigurations = script.configuration.kotlinJvmScriptCompilationConfiguration
         val scriptCompilationConfiguration = ScriptCompilationConfiguration(baseConfigurations) {
-            implicitReceivers.update {
-                //TODO add check if contextClass is child class of ScriptContext
-                if (it == null || it.isEmpty()) listOf(KotlinType(script.configuration.contextClass)) else it
+
+            //TODO add check if contextClass is child class of ScriptContext
+            implicitReceivers.put(listOf(KotlinType(script.configuration.contextClass)))
+
+            jvm {
+                //TODO replace with blocking class Loader(maybe in soft mode) just whitelisting script context class
+                dependenciesFromClassloader(
+                        classLoader = script.configuration.contextClass.java.classLoader,
+                        wholeClasspath = true
+                )
             }
             dependencies.apply {
-                append(JvmDependencyFromClassLoader {
-                    //TODO replace with blocking class Loader(maybe in soft mode) just whitelisting script context class
-                    script.configuration.contextClass.java.classLoader
-                })
                 append(script.configuration.kotlinJvmScriptDependencies)
             }
         }

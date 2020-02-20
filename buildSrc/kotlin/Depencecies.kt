@@ -1,5 +1,5 @@
 object Versions {
-    val kotlin = "1.3.70-dev-224"
+    val kotlin = "1.3.70-eap-263"
     val kotlinPlugin = "1.3.50"
     val kotlinCoroutines = "1.2.1"
     val klock = "1.0.0"
